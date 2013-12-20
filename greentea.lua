@@ -6,6 +6,7 @@ local green_tea=Class{}
 
 function green_tea:init(dir)
 	self.in_editor=false
+	self.has_editor=false
 	self.has_map=false -- whether or not a map is loaded.
 	self.plugin_directory=dir .. "/plugins"
 	self.file_dir=dir .. "/assets"
@@ -29,8 +30,19 @@ function green_tea:save(filename)
 	fsys:save(self.map, self.file_dir .. "/" .. filename)
 end
 
-function green_tea:editor()
+function green_tea:has_editor(value)
+	if(value==nil) then
+		return self:has_editor
+	else
+		self.has_editor=value
+		if(value) then self.editor=require(dir .. ".editor") end
+	end
+end
 
+function green_tea:editor()
+	if(self.has_editor) then
+		--perform editing stuff.
+	end
 end
 
 function green_tea:set_scale(x, y)
