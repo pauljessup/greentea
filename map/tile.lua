@@ -20,7 +20,7 @@ function gt_tile:draw(gt_tileset, x, y, opacity)
 	else
 		love.graphics.setColor(255, 255, 255, opacity)
 	end
-	love.graphics.drawq(gt_tileset.image, gt_tileset.quads[self.id], x, y)	
+	love.graphics.draw(gt_tileset.image, gt_tileset.quads[self.id], x, y)	
 	love.graphics.setColor(255, 255, 255, 255)
 end
 

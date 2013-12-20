@@ -6,7 +6,7 @@ function gt_filesys:init(plugin_directory)
 	--1. get the main default (gtmap) format--
 	table.insert(self.formats, gt_file_format())
 	--2. get all of the formats in plugins/formats
-	local files = love.filesystem.enumerate(plugin_directory .. "/formats/")
+	local files = love.filesystem.getDirectoryItems(plugin_directory .. "/formats/")
 	for num, name in pairs(files) do
 		if(love.filesystem.isFile(plugin_directory .. "/formats/" .. name)) then
 			local cls=love.filesystem.load(plugin_directory .. "/formats/" .. name)()
