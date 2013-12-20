@@ -30,9 +30,9 @@ function green_tea:save(filename)
 	fsys:save(self.map, self.file_dir .. "/" .. filename)
 end
 
-function green_tea:has_editor(value)
+function green_tea:using_editor(value)
 	if(value==nil) then
-		return self:has_editor
+		return self.has_editor
 	else
 		self.has_editor=value
 		if(value) then self.editor=require(dir .. ".editor") end
