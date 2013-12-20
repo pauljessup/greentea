@@ -12,11 +12,7 @@ end
 
 
 function gt_file_format:load(filename)
-    --local file
-    --file = io.open(filename, "r")
-    --local map=gt_map(TSerial.unpack(file:read("*all")))
 	map=love.filesystem.load(filename)()
-    --file:close()
 	return map
 end
 
