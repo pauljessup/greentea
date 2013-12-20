@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Greentea : A map editor built around Lua and Love2d." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Greentea</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/pauljessup/greentea">View on GitHub</a>
+
+          <h1 id="project_title">Greentea</h1>
+          <h2 id="project_tagline">A map editor built around Lua and Love2d.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/pauljessup/greentea/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/pauljessup/greentea/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a name="welcome-to-greentea-the-pure-lualove2d-mapeditorloaderplayer" class="anchor" href="#welcome-to-greentea-the-pure-lualove2d-mapeditorloaderplayer"><span class="octicon octicon-link"></span></a>Welcome to Greentea: The pure Lua/Love2d Mapeditor/loader/player</h3>
+
+<p>This is a mapeditor/loader/player written entirely in Love2d and Lua. It allows users to edit maps in the Love2d environment and save them, as well as load them and play them with ease. Right now the editor is a WIP, but will eventually allow people to call a mapeditor inside of their game while playing it.  Since Greentea uses a powerful plugin methodology for extending it, you can actually edit more than just maps inside the editor. You can edit objects on the map in real time as well, all based around how you want the program to run.</p>
+
+<h3>
+<a name="greentea-the-library" class="anchor" href="#greentea-the-library"><span class="octicon octicon-link"></span></a>Greentea: The Library</h3>
+
+<p>The git hub is the folder for the main library. This can be placed within your project, and then loaded with a simple:
+greantea=require("greentea")</p>
+
+<p>You can also put it in sub folders, so if you have a folder for libraries, you can put it in there, and it will automatically know where all the files are. Just remember to include the sub-folders when calling "require".</p>
+
+<p>Right now the mapengine uses TSerial for saving/loading maps and HUMP's Class system for allowing OOP in the way I think makes sense for the project. These files are included in the requisite directory, but I did not program either of these.</p>
+
+<h3>
+<a name="a-basic-example" class="anchor" href="#a-basic-example"><span class="octicon octicon-link"></span></a>A Basic Example</h3>
+
+<p>Here is a basic example for main.lua:</p>
+
+<p>--you need to require greentea, and it returns a greentea object.
+greentea=require("greentea")</p>
+
+<p>love.graphics.setDefaultImageFilter("nearest", "nearest")</p>
+
+<p>function love.load()
+    greentea:set_file_directory("game/maps")
+    greentea:set_scale(2, 2)
+    greentea:load("test.gtmap")
+end</p>
+
+<p>function love.update(dt)
+    --always need this--
+    greentea:update(dt)
+end</p>
+
+<p>function love.draw()
+    greentea:draw()
+end</p>
+
+<p>It's that easy! Here is that some example, packaged into a .love file:
+<a href="https://dl.dropboxusercontent.com/u/635941/greentea.love">https://dl.dropboxusercontent.com/u/635941/greentea.love</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Greentea maintained by <a href="https://github.com/pauljessup">pauljessup</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
