@@ -1,1 +1,2 @@
-require("loveframes")
+local dir=...
+require(dir .. ".loveframes")
