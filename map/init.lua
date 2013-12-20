@@ -1,0 +1,10 @@
+local dir=...
+require(dir .. ".camera")
+require(dir .. ".object")
+require(dir .. ".tile")
+require(dir .. ".tileset")
+require(dir .. ".layer")
+require(dir .. ".map")
+require(dir .. ".TSerial")
+require(dir .. ".file_format")
+require(dir .. ".filesys")
