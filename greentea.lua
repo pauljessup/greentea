@@ -74,6 +74,7 @@ end
 function green_tea:toggle_editor()
 	if(self.has_editor) then
 		self.editing=not self.editing
+		if(self.editing) then self.editor.logo.fade=true self.editor.logo.fade_in=true end
 	end
 end
 

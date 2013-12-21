@@ -4,7 +4,11 @@ function gt_editor:init(sys)
 	self.plugin_directory=sys.plugin_directory .. "/editor"
 	self.asset_directory=self.plugin_directory .. "/assets"
 	if(love.filesystem.exists(self.asset_directory .. "/logo.png")) then 
-		self.logo=love.graphics.newImage(self.asset_directory .. "/logo.png") 
+		self.logo={}
+		self.logo.image=love.graphics.newImage(self.asset_directory .. "/logo.png")
+		self.logo.fade=false
+		self.logo.fade_in=true
+		self.logo.fade_value=0
 	end
 	if(love.filesystem.exists(self.asset_directory .. "/mouse.png")) then
 		self.cursor = love.graphics.newImage(self.asset_directory .. "/mouse.png")
@@ -51,7 +55,32 @@ function gt_editor:draw()
 	if(self.cursor~=nil) then
 		local mouse=self:check_mouse()
 		love.graphics.draw(self.cursor, mouse.x, mouse.y)
+	end	
+	if(self.logo.fade) then
+		if(self.logo.fade_in) then 
+			self.logo.fade_value=self.logo.fade_value+5
+			if(self.logo.fade_value>255) then
+				self.logo.fade_in=false
+				self.logo.fade_value=255
+			end
+		else
+			self.logo.fade_value=self.logo.fade_value-5
+			if(self.logo.fade_value<0) then
+				self.logo.fade_in=true
+				self.logo.fade=false
+				self.logo.fade_value=0
+			end
+		end
+		love.graphics.setColor(255, 255, 255, self.logo.fade_value)
+		center=self:get_center_screen()
+		center.x, center.y=center.x-(self.logo.image:getWidth()/2), center.y-self.logo.image:getHeight()
+		love.graphics.draw(self.logo.image, center.x, center.y)
+		love.graphics.setColor(255, 255, 255, 255)
 	end
+end
+
+function gt_editor:get_center_screen()
+	return {x=(love.window.getWidth()/self.sys.scale.x)/2, y=(love.window.getHeight()/self.sys.scale.y)/2}
 end
 
 function gt_editor:check_mouse()
