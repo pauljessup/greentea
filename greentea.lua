@@ -2,6 +2,7 @@
 --[[ If desired, you can actually inherit from this class using include(green_tea and --]]
 --[[ over-ride what you want. --]]
 local dir=...
+require(dir .. ".map")
 local green_tea=Class{}
 
 function green_tea:init(dir)
@@ -86,7 +87,8 @@ function green_tea:draw()
 	if(self.scale~=nil) then love.graphics.scale(1, 1) end
 	if(self.has_editor) and (self.editing) then
 		self.editor:draw()
-	end	
+	end
+	if(self.scale~=nil) then love.graphics.scale(1, 1) end
 end
 
 function green_tea:new_map(map)
