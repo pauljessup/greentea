@@ -53,10 +53,6 @@ function gt_layer:get_value(value)
 	return self.values[value]
 end
 
-function gt_layer:set_tile(tile_number, x, y)
-	self.map[y][x]=tile
-end
-
 function gt_layer:set_all(original_tile, new_tile)
 	local mx, my=0,0
 	while my<height do
@@ -68,6 +64,11 @@ function gt_layer:set_all(original_tile, new_tile)
 			my=my+1
 	end	
 end
+
+function gt_layer:set_tile(tile_number, x, y)
+	self.map[y][x]=tile_number
+end
+
 
 function gt_layer:get_tile(x, y)
 	return self.tileset:get(self.map[y][x])
@@ -126,14 +127,12 @@ end
 function gt_layer:draw()
 		if(not self.hidden) then
 			local c_width, c_height=math.floor(self.camera.width/self.tileset.tile_width), math.floor(self.camera.height/self.tileset.tile_height)
-			local c_x, c_y=math.floor(self.camera.x/self.tileset.tile_width), math.floor(self.camera.y/self.tileset.tile_height)
-			local x, y=c_x-2, c_y-2
+			local x, y=math.floor(self.camera.x/self.tileset.tile_width), math.floor(self.camera.y/self.tileset.tile_height)
 			local ox, oy, ex, ey=x, y, (x+c_width)+4, (y+c_height)+4
+			local offsetx, offsety=self.camera.x%self.tileset.tile_width, self.camera.y%self.tileset.tile_height			
 			while(y<ey) do
 				while(x<ex) do
-					--local tile=self:get_tile(x, y)
-					tile=self:get_tile(4, y)
-						local offsetx, offsety=self.camera.x%self.tileset.tile_width, self.camera.y%self.tileset.tile_height
+					local tile=self:get_tile(x, y)
 						self.tileset:draw(tile, ((x-ox)*self.tileset.tile_width)-offsetx, ((y-oy)*self.tileset.tile_height)-offsety, self.opacity)
 					x=x+1
 				end
