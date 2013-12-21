@@ -9,9 +9,8 @@ function gt_map:get_tile(layer, x, y) -- map positions.
 end
 
 function gt_map:screen_to_map(x, y) --convert screen pixel cords to map cords. Good for placing tiles
-	x=x+self.map.camera.x
-	y=y+self.map.camera.y
-	return self:pixel_to_map(x, y)	
+	local o=self:screen_to_pixel(x, y)
+	return self:pixel_to_map(o.x, o.y)	
 end
 
 function gt_map:pixel_to_map(x, y) --convert world pixel cords to world map coords
@@ -19,12 +18,12 @@ function gt_map:pixel_to_map(x, y) --convert world pixel cords to world map coor
 end
 
 function gt_map:map_to_screen(x, y) --convert map (tile x, y) cords to screen cords.
-	return {x=(x*self.map.tileset.tile_width)-self.map.camera.x, y=(y*self.map.tileset.tile_height)-self.map.camera.y}
+	return {x=(x*self.tileset.tile_width)-self.camera.x, y=(y*self.tileset.tile_height)-self.camera.y}
 end
 
 function gt_map:screen_to_pixel(x, y) -- Convert screen cord to offset map pixel coordination. Good for placing objects.
-	x=x+self.map.camera.x
-	y=y+self.map.camera.y
+	x=x+self.camera.x
+	y=y+self.camera.y
 	return {x=x, y=y}
 end
 

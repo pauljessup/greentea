@@ -58,16 +58,13 @@ end
 function gt_editor:map_mouse()
 		local mouse={}
 		mouse.x, mouse.y=love.mouse.getPosition()
+		
 		-- make cords relative to scale--
-		mouse.x, mouse.y=mouse.x/self.sys.scale.x, mouse.y/self.sys.scale.y
+		mouse.x, mouse.y=math.floor(mouse.x/self.sys.scale.x), math.floor(mouse.y/self.sys.scale.y)
 		
-		--make coords relative to tile--
-		mouse.mapx=mouse.x+self.sys.map.camera.x
-		mouse.mapy=mouse.y+self.sys.map.camera.y
-		
-		mouse.mapx, mouse.mapy=math.floor(mouse.mapx/self.sys.map.tileset.tile_width), math.floor(mouse.mapy/self.sys.map.tileset.tile_height)
-		mouse.x, mouse.y=(mouse.mapx*self.sys.map.tileset.tile_width)-self.sys.map.camera.x, (mouse.mapy*self.sys.map.tileset.tile_height)-self.sys.map.camera.y
-		
+		mouse.map=self.sys.map:screen_to_map(mouse.x, mouse.y)
+		mouse.hover=self.sys.map:map_to_screen(mouse.map.x, mouse.map.y)
+
 		if(mouse.x<0) then mouse.x=1 end
 		if(mouse.y<0) then mouse.y=1 end
 		mouse.width, mouse.height=self.sys.map.tileset.tile_width, self.sys.map.tileset.tile_height
