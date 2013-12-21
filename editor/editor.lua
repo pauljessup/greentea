@@ -28,8 +28,8 @@ function gt_editor:update(dt, sys)
 	if(not self:update_tools(mouse)) then
 		local focus=self.focus:get()
 		if(focus) then
-			if(mouse.pressed~=nil) then self=self.tools[focus]:map_pressed(self, self:map_mouse()) end
-			self=self.tools[focus]:map_hover(self, self:map_mouse())
+			if(mouse.pressed~=nil) then self=self.tools[focus]:map_pressed(self) end
+			self=self.tools[focus]:map_hover(self)
 		end
 	end
 	
@@ -55,15 +55,15 @@ function gt_editor:check_mouse()
 		return mouse
 end
 
-function gt_editor:map_mouse()
+function gt_editor:map_mouse(layer)
 		local mouse={}
 		mouse.x, mouse.y=love.mouse.getPosition()
 		
 		-- make cords relative to scale--
 		mouse.x, mouse.y=math.floor(mouse.x/self.sys.scale.x), math.floor(mouse.y/self.sys.scale.y)
 		
-		mouse.map=self.sys.map:screen_to_map(mouse.x, mouse.y)
-		mouse.hover=self.sys.map:map_to_screen(mouse.map.x, mouse.map.y)
+		mouse.map=self.sys.map:screen_to_map(layer, mouse.x, mouse.y)
+		mouse.hover=self.sys.map:map_to_screen(layer, mouse.map.x, mouse.map.y)
 
 		if(mouse.x<0) then mouse.x=1 end
 		if(mouse.y<0) then mouse.y=1 end
@@ -85,11 +85,11 @@ function gt_editor:update_tools()
 	for i,v in ipairs(self.tools) do
 			local mouse=self:check_mouse()
 			if(self:check_hover(mouse, v)) then 
-				if(mouse.pressed~=nil) then self=v:mouse_pressed(self, mouse.pressed) end
+				if(mouse.pressed~=nil) then self=v:mouse_pressed(self) end
 				self=self:mouse_hover(self)
 				has_focus=true
 			end
-			self=v:update(dt, self, mouse)
+			self=v:update(dt, self)
 	end
 	return has_focus
 end

@@ -70,6 +70,11 @@ function green_tea:stop_editor()
 	end
 end
 
+function green_tea:toggle_editor()
+	if(self.has_editor) then
+		self.editing=not self.editing
+	end
+end
 
 function green_tea:set_scale(x, y)
 	self.scale={x=x, y=y}
