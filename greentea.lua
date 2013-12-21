@@ -13,6 +13,7 @@ function green_tea:init(dir)
 	self.plugin_directory=dir .. "/plugins"
 	self.file_dir=dir .. "/assets"
 	self:set_scale(1, 1)
+	self.world={}
 end
 
 function green_tea:get_tile(layer, x, y)
@@ -73,8 +74,14 @@ end
 
 function green_tea:toggle_editor()
 	if(self.has_editor) then
+		self.world=self.map:get_layer_cameras()
 		self.editing=not self.editing
-		if(self.editing) then self.editor.logo.fade=true self.editor.logo.fade_in=true end
+		if(self.editing) then
+			self.editor.logo.fade=true 
+			self.editor.logo.fade_in=true 
+		else
+			self.map:set_layer_cameras(self.world)
+		end
 	end
 end
 

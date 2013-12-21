@@ -1,5 +1,19 @@
 gt_map=Class{}
 
+function gt_map:get_layer_cameras()
+	local layers={}
+	for i,v in self:get_layers() do
+		layers[i]={x=v.camera.x, y=v.camera.y}
+	end
+	return layers
+end
+
+function gt_map:set_layer_cameras(layers)
+	for i, v in ipairs(layers) do
+		self.layers[i]:move(v.x, v.y)
+	end
+end
+
 function gt_map:set_tile(tilenumber, layer, x, y) -- map positions.
 	self.layers[layer]:set_tile(tilenumber, x, y)
 end

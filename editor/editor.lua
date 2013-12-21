@@ -9,6 +9,7 @@ function gt_editor:init(sys)
 		self.logo.fade=false
 		self.logo.fade_in=true
 		self.logo.fade_value=0
+		self.logo.hold_value=0
 	end
 	if(love.filesystem.exists(self.asset_directory .. "/mouse.png")) then
 		self.cursor = love.graphics.newImage(self.asset_directory .. "/mouse.png")
@@ -19,6 +20,7 @@ function gt_editor:init(sys)
 	self.tools={}
 	self.focus=gt_focus()	
 	--load the toolbars from the plugins--
+	--this is going to have to change.--
 	local files = love.filesystem.getDirectoryItems(self.plugin_directory .. "/tools/")
 	local id=0
 	for num, name in pairs(files) do
@@ -62,13 +64,18 @@ function gt_editor:draw()
 			if(self.logo.fade_value>255) then
 				self.logo.fade_in=false
 				self.logo.fade_value=255
+				self.logo.hold_value=50
 			end
 		else
-			self.logo.fade_value=self.logo.fade_value-5
-			if(self.logo.fade_value<0) then
-				self.logo.fade_in=true
-				self.logo.fade=false
-				self.logo.fade_value=0
+			if(self.logo.hold_value==0) then
+					self.logo.fade_value=self.logo.fade_value-5
+					if(self.logo.fade_value<0) then
+						self.logo.fade_in=true
+						self.logo.fade=false
+						self.logo.fade_value=0
+					end
+			else
+				self.logo.hold_value=self.logo.hold_value-1
 			end
 		end
 		love.graphics.setColor(255, 255, 255, self.logo.fade_value)
