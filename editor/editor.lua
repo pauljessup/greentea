@@ -2,7 +2,15 @@ gt_editor=Class{}
 
 function gt_editor:init(sys)
 	self.plugin_directory=sys.plugin_directory .. "/editor"
-	self.asset_directory=sys.plugin_directory .. "/assets"
+	self.asset_directory=self.plugin_directory .. "/assets"
+	if(love.filesystem.exists(self.asset_directory .. "/logo.png")) then 
+		self.logo=love.graphics.newImage(self.asset_directory .. "/logo.png") 
+	end
+	if(love.filesystem.exists(self.asset_directory .. "/mouse.png")) then
+		self.cursor = love.graphics.newImage(self.asset_directory .. "/mouse.png")
+		love.mouse.setVisible(false)
+	end
+	
 	self.sys=sys
 	self.tools={}
 	self.focus=gt_focus()	
@@ -39,6 +47,10 @@ end
 function gt_editor:draw()
 	for i,v in ipairs(self.tools) do
 		v:draw(self)
+	end
+	if(self.cursor~=nil) then
+		local mouse=self:check_mouse()
+		love.graphics.draw(self.cursor, mouse.x, mouse.y)
 	end
 end
 
