@@ -84,7 +84,6 @@ end
 function green_tea:draw()
 	if(self.scale~=nil) then love.graphics.scale(self.scale.x, self.scale.y) end
 	self.map:draw()
-	if(self.scale~=nil) then love.graphics.scale(1, 1) end
 	if(self.has_editor) and (self.editing) then
 		self.editor:draw()
 	end
