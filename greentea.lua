@@ -62,12 +62,14 @@ end
 
 function green_tea:run_editor()
 	if(self.has_editor) then
+		self.editor:run()
 		self.editing=true
 	end
 end
 
 function green_tea:stop_editor()
 	if(self.has_editor) then
+		self.editor:close()
 		self.editing=false
 	end
 end
@@ -77,9 +79,9 @@ function green_tea:toggle_editor()
 		self.world=self.map:get_layer_cameras()
 		self.editing=not self.editing
 		if(self.editing) then
-			self.editor.logo.fade=true 
-			self.editor.logo.fade_in=true 
+			self.editor:run()
 		else
+			self.editor:close()
 			self.map:set_layer_cameras(self.world)
 		end
 	end

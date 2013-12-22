@@ -9,15 +9,11 @@ function gt_frame:init(x, y, w, h, col, outline)
 	self.outline=outline
 end
 
-function gt_frame:update(dt)
-
-end
-
 function gt_frame:draw()
 		   love.graphics.setLineStyle("rough")
 
 		   love.graphics.setColor(self.col.r, self.col.g, self.col.b, self.col.alpha)		   
-		   love.graphics.rectangle("fill", self.x, self.y+1, self.width, self.height-1)
+		   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 		   		   
 		   love.graphics.setColor(self.outline.r, self.outline.g, self.outline.b, self.outline.alpha)
 
