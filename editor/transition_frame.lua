@@ -6,7 +6,6 @@ function gt_transition:init(transition, x, y, w, h, col, outline, editor)
 	self.original={x=x, y=y, w=w, h=h}
 	self.camera_width=editor.sys.map.camera.width	
 	self.camera_height=editor.sys.map.camera.height
-	
 	self.opened=false
 	self.closed=false
 	self.opening=false

@@ -40,14 +40,28 @@ function gt_editor:init(sys)
 	self.window_color={r=0, g=0, b=0}
 	self.frame_color={r=200, g=200, b=200}
 
-	self.tile_tools=gt_toolbar("tiletools", "slideleft", 5, 30, "vertical", 6, self)
+	self.toolset={}
+
+	table.insert(self.toolset, gt_toolbar("tiletools", "slideleft", 5, 50, "vertical", 6, self))	
+	table.insert(self.toolset, gt_transition("slidedown", -5, -5, (love.window.getWidth()/self.sys.scale.x)+50, 35,  self.window_color, self.frame_color, self))
+
+	local x, y=self:calculate_location("right", 60, 0)
+	table.insert(self.toolset, gt_toolbar("maptools", "slidedown", x, y, "horizontal", 6, self, {r=0, g=0, b=0, alpha=0}, {r=0, g=0, b=0, alpha=0}))
+end
+
+function gt_editor:calculate_location(location, x, y)
+	if(location=="top") then y=5 end
+	if(location=="bottom") then y=(love.window.getHeight()/self.scale.y)-y end
+	if(location=="left") then x=5 end
+	if(location=="right") then x=(love.window.getWidth()/self.sys.scale.x)-x end
+	return x, y
 end
 
 function gt_editor:run()
 		love.mouse.setVisible(self.edit_show_mouse)
 		self.logo.fade=true 
 		self.logo.fade_in=true 
-		self.tile_tools:open()
+		for i,v in ipairs(self.toolset) do v:open() end
 		if(self.font~=nil) then love.graphics.setFont(self.font.font) end
 end
 
@@ -55,14 +69,15 @@ function gt_editor:close()
 		love.mouse.setVisible(self.show_mouse)
 		self.logo.fade=false 
 		self.logo.fade_in=false 
-		self.tile_tools:close()
+		for i,v in ipairs(self.toolset) do v:close() end
 		if(self.font~=nil) then love.graphics.setFont(self.font.old) end
 end
 
 function gt_editor:update(dt, sys)
 	self.sys=sys
 	self:check_mouse()
-	self.tile_tools:update(dt, self)	
+	for i,v in ipairs(self.toolset) do v:update(dt, self) end
+
 	if(not self:update_tools(self.mouse)) then
 		local focus=self.focus:get()
 		if(focus) then
@@ -74,7 +89,8 @@ function gt_editor:update(dt, sys)
 end
 
 function gt_editor:draw()
-	self.tile_tools:draw(self)
+	for i,v in ipairs(self.toolset) do v:draw(self) end
+
 	if(self.cursor~=nil) then
 		self:check_mouse()
 		love.graphics.draw(self.cursor, self.mouse.x, self.mouse.y)

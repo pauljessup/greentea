@@ -28,7 +28,6 @@ function tile_tool:map_pressed(editor)
 		while y<=editor.selected.tiles.h do
 			while x<=editor.selected.tiles.w do
 					editor.sys.map:set_tile(grid.tile_map[y+oy][x+ox], editor.selected.layer, mapx+x, mapy+y)
-					if(editor.sys.map.tileset.tiles[grid.tile_map[y+oy][x+ox]]==nil) then error(grid.tile_map[30][2]) end
 					x=x+1
 			end
 			x=1

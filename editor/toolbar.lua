@@ -3,7 +3,7 @@ gt_toolbar:include(gt_transition)
 
 function gt_toolbar:weight_sort(a,b) return a.weight < b.weight end
 
-function gt_toolbar:init(name, transition, x, y, orientation, padding, editor)
+function gt_toolbar:init(name, transition, x, y, orientation, padding, editor, col, outline)
 	self.name=name
 	--load all the tool plugins based on name.
 	self.tools={}
@@ -41,7 +41,9 @@ function gt_toolbar:init(name, transition, x, y, orientation, padding, editor)
 	
 	editor.window_color.alpha=175
 	editor.frame_color.alpha=200
-	gt_transition.init(self, transition, x, y, tw, th, editor.window_color, editor.frame_color, editor)
+	if(col==nil) then col=editor.window_color end
+	if(outline==nil) then outline=editor.window_color end
+	gt_transition.init(self, transition, x, y, tw, th, col, outline, editor)
 end
 
 function gt_toolbar:update(dt, editor)

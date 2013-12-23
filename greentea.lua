@@ -37,6 +37,7 @@ function green_tea:update(dt)
 end
 
 function green_tea:load(filename)
+	self.filename=filename
 	local fsys=gt_filesys(self.plugin_directory)
 	self:load_map(fsys:load(self.file_dir .. "/" .. filename))	
 
@@ -51,6 +52,7 @@ function green_tea:load(filename)
 end
 
 function green_tea:save(filename)
+	if(filename==nil) then filename=self.filename end
 	local fsys=gt_filesys(self.plugin_directory)
 	fsys:save(self.map, self.file_dir .. "/" .. filename)
 end
@@ -101,6 +103,7 @@ function green_tea:draw()
 end
 
 function green_tea:new_map(map)
+	self.filename=map.name .. ".gtmap"
 	self:load_map(map)
 end
 
