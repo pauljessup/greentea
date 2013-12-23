@@ -1,21 +1,48 @@
 gt_map=Class{}
 
-function gt_map:pixel_to_map(x, y) --convert pixel cords to map cords.
-	return math.floor(x/self.tileset.tile_width), math.floor(y/self.tileset.tile_height) 
+function gt_map:get_layer_cameras()
+	local layers={}
+	for i,v in self:get_layers() do
+		layers[i]={x=v.camera.x, y=v.camera.y}
+	end
+	return layers
 end
 
-function gt_map:map_to_screen(x, y) --convert map cords to screen cords.
-	local x, y=self:map_to_pixel(x, y)
-	return self:pixel_to_screen(x, y)
+function gt_map:set_layer_cameras(layers)
+	for i, v in ipairs(layers) do
+		self.layers[i]:move(v.x, v.y)
+	end
 end
 
-function gt_map:pixel_to_screen(x, y) --convert offset map pixel cords to screen cords.
-	return x-self.camera.x, y-self.camera.y
+function gt_map:set_tile(tilenumber, layer, x, y) -- map positions.
+	self.layers[layer]:set_tile(tilenumber, x, y)
 end
 
-function gt_map:map_to_pixel(x, y) --convert map cords to pixel cords.
-	return x*self.tileset.tile_width, y*self.tileset.tile_height
+function gt_map:get_tile(layer, x, y) -- map positions.
+	return self.layers[layer]:get_tile(x, y)
 end
+
+function gt_map:screen_to_map(layer, x, y) --convert screen pixel cords to map cords. Good for placing tiles
+	local o=self:screen_to_pixel(layer, x, y)
+	return self:pixel_to_map(o.x, o.y)	
+end
+
+function gt_map:pixel_to_map(x, y) --convert world pixel cords to world map coords
+	return {x=math.floor(x/self.tileset.tile_width), y=math.floor(y/self.tileset.tile_height)}
+end
+
+function gt_map:map_to_screen(layer, x, y) --convert map (tile x, y) cords to screen cords.
+	local camera=self.layers[layer].camera
+	return {x=(x*self.tileset.tile_width)-camera.x, y=(y*self.tileset.tile_height)-camera.y}
+end
+
+function gt_map:screen_to_pixel(layer, x, y) -- Convert screen cord to offset map pixel coordination. Good for placing objects.
+	local camera=self.layers[layer].camera
+	x=x+camera.x
+	y=y+camera.y
+	return {x=x, y=y}
+end
+
 
 function gt_map:init(map_table)
 	self.name=map_table.name

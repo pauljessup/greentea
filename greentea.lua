@@ -2,14 +2,26 @@
 --[[ If desired, you can actually inherit from this class using include(green_tea and --]]
 --[[ over-ride what you want. --]]
 local dir=...
+require(dir .. ".map")
 local green_tea=Class{}
 
 function green_tea:init(dir)
-	self.in_editor=false
+	self.editing=false
 	self.has_editor=false
 	self.has_map=false -- whether or not a map is loaded.
+	self.lib_directory=dir
 	self.plugin_directory=dir .. "/plugins"
 	self.file_dir=dir .. "/assets"
+	self:set_scale(1, 1)
+	self.world={}
+end
+
+function green_tea:get_tile(layer, x, y)
+	return self.map:get_tile(layer, x, y)
+end
+
+function green_tea:set_tile(tile, layer, x, y)
+	self.map:set_tile(tile, layer, x, y)
 end
 
 function green_tea:set_file_directory(dir)
@@ -17,31 +29,63 @@ function green_tea:set_file_directory(dir)
 end
 
 function green_tea:update(dt)
-	self.map:update(dt)
+	if(self.has_editor) and (self.editing) then
+		self=self.editor:update(dt, self)
+	else
+		self.map:update(dt)
+	end
 end
 
 function green_tea:load(filename)
+	self.filename=filename
 	local fsys=gt_filesys(self.plugin_directory)
-	self:load_map(fsys:load(self.file_dir .. "/" .. filename))		
+	self:load_map(fsys:load(self.file_dir .. "/" .. filename))	
+
+	if(self.has_editor) then
+		if(editor~=nil) and (love.filesystem.exists(self.plugin_directory .. "/editors/" .. editor .. ".lua")) then
+				local editor_class=love.filesystem.load(self.plugin_directory .. "/editors/" .. editor .. ".lua")()
+				self.editor=editor_class(self)
+		else
+				self.editor=gt_editor(self)
+		end
+	end
 end
 
 function green_tea:save(filename)
+	if(filename==nil) then filename=self.filename end
 	local fsys=gt_filesys(self.plugin_directory)
 	fsys:save(self.map, self.file_dir .. "/" .. filename)
 end
 
-function green_tea:using_editor(value)
-	if(value==nil) then
-		return self.has_editor
-	else
-		self.has_editor=value
-		if(value) then self.editor=require(dir .. ".editor") end
+function green_tea:using_editor(editor)
+	self.has_editor=true
+	require(self.lib_directory .. ".editor")
+end
+
+function green_tea:run_editor()
+	if(self.has_editor) then
+		self.editor:run()
+		self.editing=true
 	end
 end
 
-function green_tea:editor()
+function green_tea:stop_editor()
 	if(self.has_editor) then
-		--perform editing stuff.
+		self.editor:close()
+		self.editing=false
+	end
+end
+
+function green_tea:toggle_editor()
+	if(self.has_editor) then
+		self.world=self.map:get_layer_cameras()
+		self.editing=not self.editing
+		if(self.editing) then
+			self.editor:run()
+		else
+			self.editor:close()
+			self.map:set_layer_cameras(self.world)
+		end
 	end
 end
 
@@ -52,10 +96,14 @@ end
 function green_tea:draw()
 	if(self.scale~=nil) then love.graphics.scale(self.scale.x, self.scale.y) end
 	self.map:draw()
+	if(self.has_editor) and (self.editing) then
+		self.editor:draw()
+	end
 	if(self.scale~=nil) then love.graphics.scale(1, 1) end
 end
 
 function green_tea:new_map(map)
+	self.filename=map.name .. ".gtmap"
 	self:load_map(map)
 end
 
