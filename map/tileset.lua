@@ -23,7 +23,7 @@ function gt_tileset:init(tileset_table)
 				table.insert(self.tiles, gt_tile({id=id, opacity=255, values={}}))
 				spx=spx+self.tile_width
 			end
-			spx=self.tile_width
+			spx=0
 			spy=spy+self.tile_height
 	end
 end
@@ -35,6 +35,59 @@ end
 -- anims.speed = speed in drawing the frames
 function gt_tileset:set_animation(starting_tile_number, anims)
 	self.anims[starting_tile_number]=anims
+end
+
+function gt_tileset:select_grid(x, y)
+	local x,y=x-(self.image:getWidth()/2), y-(self.image:getHeight()/2)
+	local width=self.image:getWidth()
+	local imagex=0
+	local ox=x
+	local grid_select={}
+	for i,v in ipairs(self.tiles) do		
+		x=imagex+ox
+		self:draw(i, x, y, 255)
+		
+		table.insert(grid_select, {x=x,y=y,i,height=self.tile_height,width=self.tile_width})
+		if(imagex==width) then 
+			imagex=0
+			y=y+self.tile_height
+		else 
+			imagex=imagex+self.tile_width 
+		end
+	end
+	return grid_select
+end
+
+function gt_tileset:select_grid_layout(x, y)
+
+	local x,y=x-(self.image:getWidth()/2), y-(self.image:getHeight()/2)
+	local width=self.image:getWidth()
+	local imagex=0
+	local ox=x
+	local grid_select={}
+	grid_select.x=x
+	grid_select.y=y
+	grid_select.hover_check={}
+	grid_select.tile_map={}
+	local mapx, mapy=1,1
+	grid_select.tile_map[mapy]={}
+	
+	for i,v in ipairs(self.tiles) do		
+		x=imagex+ox
+		table.insert(grid_select.hover_check, {x=x,y=y,id=i, height=self.tile_height, width=self.tile_width})
+		grid_select.tile_map[mapy][mapx]=i
+		
+		if(imagex==width) then 
+			imagex=0
+			y=y+self.tile_height
+			mapy=mapy+1
+			grid_select.tile_map[mapy]={}
+		else 
+			imagex=imagex+self.tile_width
+			mapx=mapx+1
+		end
+	end
+	return grid_select
 end
 
 

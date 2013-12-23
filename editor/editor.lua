@@ -3,6 +3,13 @@ gt_editor=Class{}
 function gt_editor:init(sys)
 	self.plugin_directory=sys.plugin_directory .. "/editor"
 	self.asset_directory=self.plugin_directory .. "/assets"
+	self.selected={}
+	self.selected.tile=1
+	self.selected.tiles={}
+	self.selected.tiles.use=false
+	self.selected.layer=2
+	self.mouse={x=0, y=0, held=false, holding=0}
+	
 	if(love.filesystem.exists(self.asset_directory .. "/logo.png")) then 
 		self.logo={}
 		self.logo.image=love.graphics.newImage(self.asset_directory .. "/logo.png")
@@ -32,23 +39,8 @@ function gt_editor:init(sys)
 	self.focus=gt_focus()	
 	self.window_color={r=0, g=0, b=0}
 	self.frame_color={r=200, g=200, b=200}
-	--load the toolbars from the plugins--
-	--this is going to have to change.--
-	--[[
-	local files = love.filesystem.getDirectoryItems(self.plugin_directory .. "/tools/")
-	local id=0
-	for num, name in pairs(files) do
-		if(love.filesystem.isFile(self.plugin_directory .. "/tools/" .. name)) then
-			id=id+1
-			local cls=love.filesystem.load(self.plugin_directory .. "/tools/" .. name)()
-			if(cls~=nil) then 
-				table.insert(self.tools, cls(self, 100, 100, id))
-				if(name=="tile.lua") then self.focus:gain(id) end --default is the tile tool. 
-			end
-		end
-	end
-	--]]
-	self.tile_tools=gt_toolbar("tiletools", "slideleft", 5, 30, "vertical", 4, self)
+
+	self.tile_tools=gt_toolbar("tiletools", "slideleft", 5, 30, "vertical", 6, self)
 end
 
 function gt_editor:run()
@@ -69,24 +61,23 @@ end
 
 function gt_editor:update(dt, sys)
 	self.sys=sys
-	local mouse=self:check_mouse()
-	
-	if(not self:update_tools(mouse)) then
+	self:check_mouse()
+	self.tile_tools:update(dt, self)	
+	if(not self:update_tools(self.mouse)) then
 		local focus=self.focus:get()
 		if(focus) then
-			if(mouse.pressed~=nil) then self=self.tools[focus]:map_pressed(self) end
+			if(self.mouse.pressed~=nil) then self=self.tools[focus]:map_pressed(self) end
 			self=self.tools[focus]:map_hover(self)
 		end
 	end
-	self.tile_tools:update(dt, self)
 	return self.sys
 end
 
 function gt_editor:draw()
 	self.tile_tools:draw(self)
 	if(self.cursor~=nil) then
-		local mouse=self:check_mouse()
-		love.graphics.draw(self.cursor, mouse.x, mouse.y)
+		self:check_mouse()
+		love.graphics.draw(self.cursor, self.mouse.x, self.mouse.y)
 	end	
 	if(self.logo.fade) then
 		if(self.logo.fade_in) then 
@@ -121,39 +112,50 @@ function gt_editor:get_center_screen()
 end
 
 function gt_editor:check_mouse()
-		local mouse={}
-		mouse.x, mouse.y=love.mouse.getPosition()
+		self.mouse.x, self.mouse.y=love.mouse.getPosition()
 		-- make cords relative to scale--
-		mouse.x, mouse.y=mouse.x/self.sys.scale.x, mouse.y/self.sys.scale.y
-		if(mouse.x<0) then mouse.x=1 end
-		if(mouse.y<0) then mouse.y=1 end
-		mouse.width, mouse.height=self.sys.map.tileset.tile_width*self.sys.scale.x, self.sys.map.tileset.tile_height*self.sys.scale.y
-		if(love.mouse.isDown("r")) then mouse.pressed="r" end
-		if(love.mouse.isDown("l")) then	mouse.pressed="l" end	
-		return mouse
+		self.mouse.x, self.mouse.y=math.floor(self.mouse.x/self.sys.scale.x), math.floor(self.mouse.y/self.sys.scale.y)
+		self.mouse.map=self.sys.map:screen_to_map(self.selected.layer, self.mouse.x, self.mouse.y)
+		self.mouse.hover=self.sys.map:map_to_screen(self.selected.layer, self.mouse.map.x, self.mouse.map.y)
+		
+		if(self.mouse.x<0) then self.mouse.x=1 end
+		if(self.mouse.y<0) then self.mouse.y=1 end
+		self.mouse.width, self.mouse.height=self.sys.map.tileset.tile_width*self.sys.scale.x, self.sys.map.tileset.tile_height*self.sys.scale.y
+		self:check_button()
 end
 
-function gt_editor:map_mouse(layer)
-		local mouse={}
-		mouse.x, mouse.y=love.mouse.getPosition()
-		
-		-- make cords relative to scale--
-		mouse.x, mouse.y=math.floor(mouse.x/self.sys.scale.x), math.floor(mouse.y/self.sys.scale.y)
-		
-		mouse.map=self.sys.map:screen_to_map(layer, mouse.x, mouse.y)
-		mouse.hover=self.sys.map:map_to_screen(layer, mouse.map.x, mouse.map.y)
 
-		if(mouse.x<0) then mouse.x=1 end
-		if(mouse.y<0) then mouse.y=1 end
-		mouse.width, mouse.height=self.sys.map.tileset.tile_width, self.sys.map.tileset.tile_height
-		if(love.mouse.isDown("r")) then mouse.pressed="r" end
-		if(love.mouse.isDown("l")) then	mouse.pressed="l" end	
-		return mouse
+function gt_editor:check_button()
+		local down, p=false, ""
+		
+		if(love.mouse.isDown("r")) then 
+			down=true
+			p="r"
+		end
+		
+		if(love.mouse.isDown("l")) then 
+			down=true
+			p="l"
+		end
+		
+		if(down) then
+			if(not self.mouse.held) then
+				self.mouse.pressed=p
+				self.mouse.held=true
+			else
+				self.mouse.holding=self.mouse.holding+1
+				self.mouse.held=nil
+			end
+		else
+			self.mouse.pressed=nil
+			self.mouse.holding=0
+			self.mouse.held=nil
+		end
 end
 
 function gt_editor:check_hover(mouse, widget)
  return mouse.x < widget.x+widget.width and
-         widget.x < mouse.x+mouse.width and
+         widget.x < self.mouse.x+mouse.width and
          mouse.y < widget.y+widget.height and
          widget.y < mouse.y+mouse.height	
 end
@@ -161,9 +163,9 @@ end
 function gt_editor:update_tools()
 	local has_focus=false
 	for i,v in ipairs(self.tools) do
-			local mouse=self:check_mouse()
-			if(self:check_hover(mouse, v)) then 
-				if(mouse.pressed~=nil) then self=v:mouse_pressed(self) end
+			self:check_mouse()
+			if(self:check_hover(self.mouse, v)) and (not has_focus) then 
+				if(self.mouse.pressed~=nil) then self=v:mouse_pressed(self) end
 				self=v:mouse_hover(self)
 				has_focus=true
 			end

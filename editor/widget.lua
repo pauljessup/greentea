@@ -1,6 +1,7 @@
 gt_widget=Class{}
 
 function gt_widget:init(editor, x, y, id, tooltip)
+	self.weight=1
 	self.id=id
 	self.x, self.y=x,y
 	self.width, self.height=0,0
@@ -8,6 +9,10 @@ function gt_widget:init(editor, x, y, id, tooltip)
 	self.is_hover=false
 	self.hover_tip=gt_frame(x+3, y-7, editor.font.font:getWidth(tooltip)+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=100}, {r=0, g=0, b=0, alpha=255}) 
 	self.focus=false
+end
+
+function gt_widget:set_tooltip(editor,tooltip)
+	self.hover_tip=gt_frame(self.x+3, self.y-7, editor.font.font:getWidth(tooltip)+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=100}, {r=0, g=0, b=0, alpha=255}) 
 end
 
 function gt_widget:add_button(editor,filename)
@@ -51,6 +56,7 @@ function gt_widget:map_pressed(editor)
 
 return editor
 end
+
 
 function gt_widget:map_hover(editor)
 

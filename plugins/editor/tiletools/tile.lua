@@ -16,9 +16,25 @@ return editor
 end
 
 function tile_tool:map_pressed(editor)
-	self.working_layer=2
-	local mouse=editor:map_mouse(self.working_layer)	
-	editor.sys.map:set_tile(9, 2, mouse.map.x, mouse.map.y)
+	local mapx,mapy=editor.mouse.map.x, editor.mouse.map.y
+	if(not editor.selected.tiles.use) then
+		editor.sys.map:set_tile(editor.selected.tile, editor.selected.layer, mapx, mapy)
+	else
+		local ox,oy=editor.selected.tiles.x, editor.selected.tiles.y
+		local x, y=1,1
+		local center=editor:get_center_screen()
+		local grid=editor.sys.map.tileset:select_grid_layout(center.x, center.y+editor.selected.modal.y)			
+		
+		while y<=editor.selected.tiles.h do
+			while x<=editor.selected.tiles.w do
+					editor.sys.map:set_tile(grid.tile_map[y+oy][x+ox], editor.selected.layer, mapx+x, mapy+y)
+					if(editor.sys.map.tileset.tiles[grid.tile_map[y+oy][x+ox]]==nil) then error(grid.tile_map[2][1]) end
+					x=x+1
+			end
+			x=1
+			y=y+1
+		end
+	end
 return editor
 end
 
@@ -29,12 +45,11 @@ end
 
 function tile_tool:draw(editor)
 	if(self.tile.draw) then 
-		local mouse=editor:map_mouse(self.working_layer)
-		self.hover.x=mouse.hover.x
-		self.hover.y=mouse.hover.y
+		self.hover.x=editor.mouse.hover.x
+		self.hover.y=editor.mouse.hover.y
 		self.hover:draw()
 	end
-	gt_widget.draw(self)
+	gt_widget.draw(self, editor)
 end
 
 return tile_tool
