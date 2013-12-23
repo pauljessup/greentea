@@ -37,7 +37,7 @@ function multi_tile:get_multiple_tiles(editor)
 	local center=editor:get_center_screen()
 	local grid=editor.sys.map.tileset:select_grid_layout(center.x, center.y+self.modal.y)	editor.selected.tiles={}
 
-	editor.selected.tiles={x=math.floor((self.hover.x-grid.x)/tile_width), y=math.floor((self.hover.y-grid.y)/tile_height), w=math.floor(self.hover.width/tile_width), h=math.floor(self.hover.height/tile_height), use=true}
+	editor.selected.tiles={x=math.floor((self.hover.x-grid.x)/tile_width)-1, y=math.floor((self.hover.y-grid.y)/tile_height), w=math.floor(self.hover.width/tile_width), h=math.floor(self.hover.height/tile_height), use=true}
 	return editor
 end
 

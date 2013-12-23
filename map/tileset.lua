@@ -81,6 +81,7 @@ function gt_tileset:select_grid_layout(x, y)
 			imagex=0
 			y=y+self.tile_height
 			mapy=mapy+1
+			mapx=0
 			grid_select.tile_map[mapy]={}
 		else 
 			imagex=imagex+self.tile_width
