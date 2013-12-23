@@ -90,9 +90,9 @@ end
 
 function gt_editor:draw()
 	for i,v in ipairs(self.toolset) do v:draw(self) end
-
+	self:check_mouse()
+	
 	if(self.cursor~=nil) then
-		self:check_mouse()
 		love.graphics.draw(self.cursor, self.mouse.x, self.mouse.y)
 	end	
 	if(self.logo.fade) then
@@ -119,8 +119,10 @@ function gt_editor:draw()
 		center=self:get_center_screen()
 		center.x, center.y=center.x-(self.logo.image:getWidth()/2), center.y-self.logo.image:getHeight()
 		love.graphics.draw(self.logo.image, center.x, center.y)
-		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.setColor(255, 255, 255, 255)		
 	end
+		love.graphics.print("map: " .. self.sys.map.name .. " :: tile position  x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y .. " ", 5, 10)
+	
 end
 
 function gt_editor:get_center_screen()
