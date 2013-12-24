@@ -11,18 +11,21 @@ function gt_transition:init(transition, x, y, w, h, col, outline, editor)
 	self.opening=false
 	self.closing=false
 	gt_frame.init(self, x, y, w, h, col, outline)
+	self.hidden=true
 	self:get_starting()
 end
 
 function gt_transition:open()
 	self.closed=false
 	self.opening=true
+	self.hidden=false
 	self:get_starting()
 end
 
 function gt_transition:close()
 	self.opened=false
 	self.closing=true
+	self.hidden=false
 	self:get_ending()
 end
 
@@ -84,8 +87,8 @@ function gt_transition:check_open()
 			self.opened=true
 		end	
 	elseif(self.transition=="open") then
-		if(self.x>=self.targeth) then
-			self.x=self.targeth
+		if(self.height>=self.targeth) then
+			self.height=self.targeth
 			self.opening=false
 			self.opened=true
 		end
@@ -118,10 +121,11 @@ function gt_transition:check_closed()
 			self.closed=true
 		end	
 	elseif(self.transition=="open") then
-		if(self.x<=self.targeth) then
-			self.x=self.targeth
+		if(self.height<0) then
+			self.height=0
 			self.closing=false
 			self.closed=true
+			self.hidden=true
 		end
 	end	
 end
@@ -138,7 +142,7 @@ function gt_transition:update(dt)
 			elseif(self.transition=="slideright") then
 				self.x=self.x-4
 			elseif(self.transition=="open") then
-				self.height=self.height+4
+				self.height=self.height+2
 			end
 			self:check_open()
 	elseif(self.closing) then
@@ -151,7 +155,7 @@ function gt_transition:update(dt)
 			elseif(self.transition=="slideright") then
 				self.x=self.x+4
 			elseif(self.transition=="open") then
-				self.height=self.height-4
+				self.height=self.height-2
 			end	
 			self:check_closed()
 	end
