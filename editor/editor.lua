@@ -121,8 +121,9 @@ function gt_editor:draw()
 		love.graphics.draw(self.logo.image, center.x, center.y)
 		love.graphics.setColor(255, 255, 255, 255)		
 	end
-		love.graphics.print("map: " .. self.sys.map.name .. " :: tile position  x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y .. " ", 5, 10)
-	
+		love.graphics.print("editing " .. self.sys.map.name .. "  map", 5, 2)
+		love.graphics.print("tile  x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y, 5, 12)
+		
 end
 
 function gt_editor:get_center_screen()
@@ -136,8 +137,22 @@ function gt_editor:check_mouse()
 		self.mouse.map=self.sys.map:screen_to_map(self.selected.layer, self.mouse.x, self.mouse.y)
 		self.mouse.hover=self.sys.map:map_to_screen(self.selected.layer, self.mouse.map.x, self.mouse.map.y)
 		
-		if(self.mouse.x<0) then self.mouse.x=1 end
-		if(self.mouse.y<0) then self.mouse.y=1 end
+		if(self.mouse.x<1) then 
+			self.mouse.x=1 
+			self.sys.map:scroll(-1, 0)
+		end
+		if(self.mouse.y<1) then
+			self.mouse.y=1
+			if(self.sys.map.camera.y>0) then 
+				self.sys.map:scroll(0, -1)
+			end
+		end
+		if(self.mouse.x>((love.window.getWidth()/self.sys.scale.x)-8)) then
+			self.sys.map:scroll(1, 0)
+		end
+		if(self.mouse.y>((love.window.getHeight()/self.sys.scale.y)-8)) then
+			self.sys.map:scroll(0, 1)
+		end		
 		self.mouse.width, self.mouse.height=self.sys.map.tileset.tile_width*self.sys.scale.x, self.sys.map.tileset.tile_height*self.sys.scale.y
 		self:check_button()
 end

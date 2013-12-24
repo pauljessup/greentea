@@ -71,7 +71,7 @@ end
 
 
 function gt_layer:get_tile(x, y)
-	return self.tileset:get(self.map[y][x])
+	if(self.map[y][x]~=nil) then  return self.tileset:get(self.map[y][x]) else return 1 end
 end
 
 function gt_layer:change_tile_values(id, opacity, values)
@@ -114,9 +114,9 @@ function gt_layer:is_hidden()
 end
 
 function gt_layer:check_edges()
-	local edge_bot=0
+	local edge_bot=self.tileset.tile_height
 	local edge_top=(self.height*self.tileset.tile_height)-self.camera.height
-	local edge_left=0
+	local edge_left=self.tileset.tile_width
 	local edge_right=(self.width*self.tileset.tile_width)-self.camera.width
 	if(self.camera.x<=edge_left) then self.camera.x=edge_left 
 	elseif(self.camera.x>=edge_right) then self.camera.x=edge_right
