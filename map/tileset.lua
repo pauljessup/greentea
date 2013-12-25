@@ -38,7 +38,7 @@ function gt_tileset:set_animation(starting_tile_number, anims)
 end
 
 function gt_tileset:select_grid(x, y)
-	local x,y=x-(self.image:getWidth()/2), y-(self.image:getHeight()/2)
+	local x,y=x-(self.image:getWidth()/2), y+(self.tile_height)
 	local width=self.image:getWidth()
 	local imagex=0
 	local ox=x
@@ -60,7 +60,7 @@ end
 
 function gt_tileset:select_grid_layout(x, y)
 
-	local x,y=x-(self.image:getWidth()/2), y-(self.image:getHeight()/2)
+	local x,y=x-(self.image:getWidth()/2), y+(self.tile_height)
 	local width=self.image:getWidth()
 	local imagex=0
 	local ox=x
@@ -148,14 +148,14 @@ function gt_tileset:get_anim_frame(tilenumber)
 	return tilenumber
 end
 
-function gt_tileset:update()
+function gt_tileset:update(dt)
 	if(self.anims~=nil) then
 			for i, v in pairs(self.anims) do
 					if(v.speed~=nil) then
 						if(v.counter>v.speed) then
 							local last_tile=v.current
 							v.counter=0
-							v.current=v.current+1
+							v.current=v.current+(1*dt)
 							if(v.current==#v.frames) then v.current=i end
 						else
 							v.counter=v.counter+1

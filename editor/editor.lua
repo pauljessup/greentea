@@ -7,7 +7,7 @@ function gt_editor:init(sys)
 	self.selected.tile=1
 	self.selected.tiles={}
 	self.selected.tiles.use=false
-	self.selected.layer=1
+	self.selected.layer=2
 	self.focus_tool=1
 	
 	self.mouse={x=0, y=0, held=false, holding=0}
@@ -143,9 +143,9 @@ function gt_editor:check_mouse()
 			self.mouse.x=1 
 			self.sys.map:scroll(-1, 0)
 		end
-		if(self.mouse.y<1) then
+		if(self.mouse.y<=1) then
 			self.mouse.y=1
-			if(self.sys.map.camera.y>=1) then 
+			if(self.sys.map.camera.y>self.sys.map.tileset.tile_height) then			
 				self.sys.map:scroll(0, -1)
 			end
 		end
@@ -156,6 +156,9 @@ function gt_editor:check_mouse()
 			self.sys.map:scroll(0, 1)
 		end		
 		self.mouse.width, self.mouse.height=self.sys.map.tileset.tile_width*self.sys.scale.x, self.sys.map.tileset.tile_height*self.sys.scale.y
+		self.mouse.widget={}
+		self.mouse.widget.x, self.mouse.widget.y=self.mouse.x, self.mouse.y
+		self.mouse.widget.width, self.mouse.widget.height=8,8
 		self:check_button()
 end
 
@@ -199,7 +202,7 @@ function gt_editor:update_tools()
 	local has_focus=false
 	for i,v in ipairs(self.tools) do
 			self:check_mouse()
-			if(self:check_hover(self.mouse, v)) and (not has_focus) then 
+			if(self:check_hover(self.mouse.widget, v)) and (not has_focus) then 
 				if(self.mouse.pressed~=nil) then self=v:mouse_pressed(self) end
 				self=v:mouse_hover(self)
 				has_focus=true

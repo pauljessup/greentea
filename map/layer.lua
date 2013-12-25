@@ -97,7 +97,8 @@ end
 
 
 function gt_layer:update(dt)
-	self.tileset:update()
+	self.tileset:update(dt)
+	self.camera:update(dt)
 end
 
 function gt_layer:hide()

@@ -134,28 +134,28 @@ end
 function gt_transition:update(dt)
 	if(self.opening) then
 			if(self.transition=="slideup") then
-				self.y=self.y-4
+				self.y=self.y-8
 			elseif(self.transition=="slidedown") then
-				self.y=self.y+4		
+				self.y=self.y+8		
 			elseif(self.transition=="slideleft") then
-				self.x=self.x+4
+				self.x=self.x+8
 			elseif(self.transition=="slideright") then
-				self.x=self.x-4
+				self.x=self.x-8
 			elseif(self.transition=="open") then
-				self.height=self.height+2
+				self.height=self.height+8
 			end
 			self:check_open()
 	elseif(self.closing) then
 			if(self.transition=="slideup") then
-				self.y=self.y+4
+				self.y=self.y+8
 			elseif(self.transition=="slidedown") then
-				self.y=self.y-4		
+				self.y=self.y-8		
 			elseif(self.transition=="slideleft") then
-				self.x=self.x-4
+				self.x=self.x-8
 			elseif(self.transition=="slideright") then
-				self.x=self.x+4
+				self.x=self.x+8
 			elseif(self.transition=="open") then
-				self.height=self.height-2
+				self.height=self.height-8
 			end	
 			self:check_closed()
 	end
