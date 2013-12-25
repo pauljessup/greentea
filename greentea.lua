@@ -105,6 +105,14 @@ end
 function green_tea:new_map(map)
 	self.filename=map.name .. ".gtmap"
 	self:load_map(map)
+	if(self.has_editor) then
+		if(editor~=nil) and (love.filesystem.exists(self.plugin_directory .. "/editors/" .. editor .. ".lua")) then
+				local editor_class=love.filesystem.load(self.plugin_directory .. "/editors/" .. editor .. ".lua")()
+				self.editor=editor_class(self)
+		else
+				self.editor=gt_editor(self)
+		end
+	end	
 end
 
 function green_tea:load_camera(camera)
@@ -152,6 +160,7 @@ end
 
 function green_tea:load_map(map)
 			map.plugin_directory=self.plugin_directory
+			map.camera={x=0, y=-0, height=(love.window.getHeight()/self.scale.y), width=(love.window.getWidth()/self.scale.x), speed=1}
 			map.camera=self:load_camera(map.camera)
 			map.tileset=self:load_tileset(map.tileset)
 			

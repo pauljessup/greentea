@@ -7,7 +7,9 @@ function gt_editor:init(sys)
 	self.selected.tile=1
 	self.selected.tiles={}
 	self.selected.tiles.use=false
-	self.selected.layer=2
+	self.selected.layer=1
+	self.focus_tool=1
+	
 	self.mouse={x=0, y=0, held=false, holding=0}
 	
 	if(love.filesystem.exists(self.asset_directory .. "/logo.png")) then 
@@ -41,12 +43,11 @@ function gt_editor:init(sys)
 	self.frame_color={r=200, g=200, b=200}
 
 	self.toolset={}
-
-	table.insert(self.toolset, gt_toolbar("tiletools", "slideleft", 5, 50, "vertical", 6, self))	
-	table.insert(self.toolset, gt_transition("slidedown", -5, -5, (love.window.getWidth()/self.sys.scale.x)+50, 35,  self.window_color, self.frame_color, self))
-
-	local x, y=self:calculate_location("right", 60, 0)
+	local x, y=self:calculate_location("right", 100, 0)
+	table.insert(self.toolset, gt_transition("slidedown", -5, -5, (love.window.getWidth()/self.sys.scale.x)+50, 35,  self.window_color, self.frame_color, self))	
 	table.insert(self.toolset, gt_toolbar("maptools", "slidedown", x, y, "horizontal", 6, self, {r=0, g=0, b=0, alpha=0}, {r=0, g=0, b=0, alpha=0}))
+	
+	table.insert(self.toolset, gt_toolbar("tiletools", "slideleft", 5, 50, "vertical", 6, self))	
 end
 
 function gt_editor:calculate_location(location, x, y)
@@ -61,7 +62,8 @@ function gt_editor:run()
 		love.mouse.setVisible(self.edit_show_mouse)
 		self.logo.fade=true 
 		self.logo.fade_in=true 
-		for i,v in ipairs(self.toolset) do v:open() end
+		self.toolset[1]:open()
+		self.toolset[2]:open()
 		if(self.font~=nil) then love.graphics.setFont(self.font.font) end
 end
 
@@ -143,7 +145,7 @@ function gt_editor:check_mouse()
 		end
 		if(self.mouse.y<1) then
 			self.mouse.y=1
-			if(self.sys.map.camera.y>0) then 
+			if(self.sys.map.camera.y>=1) then 
 				self.sys.map:scroll(0, -1)
 			end
 		end

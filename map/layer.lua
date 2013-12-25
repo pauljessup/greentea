@@ -40,7 +40,6 @@ function gt_layer:save_table()
 	l.width=self.width
 	l.opacity=self.opacity
 	l.tileset=self.tileset:save_table()
-	l.camera=self.camera:save_table()
 	l.map=self.map
 	return l
 end

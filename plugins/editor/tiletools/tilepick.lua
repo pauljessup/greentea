@@ -5,7 +5,7 @@ function multi_tile:init(editor, x, y, id)
 	editor.window_color.alpha=150
 	editor.frame_color.alpha=190			
 	gt_widget.init(self, editor, x, y, id, "pick a tile or group of tiles to use")
-	self.modal=gt_transition("slideleft", 0, 0, editor.sys.map.tileset.image:getWidth()+(editor.sys.map.tileset.tile_width*4), editor.sys.map.tileset.image:getHeight()+(editor.sys.map.tileset.tile_height*4), editor.window_color, editor.frame_color, editor)
+	self.modal=gt_transition("slideleft", 0, 0, editor.sys.map.tileset.image:getWidth()+(editor.sys.map.tileset.tile_width*4), editor.sys.map.tileset.image:getHeight(), editor.window_color, editor.frame_color, editor)
 	self.hover=gt_frame(0, 0, editor.sys.map.tileset.tile_width, editor.sys.map.tileset.tile_height, {r=216, g=194, b=92, alpha=100}, {r=133, g=120, b=57, alpha=175})
 	self.weight=3
 	self.working_layer=editor.selected.layer
@@ -20,7 +20,7 @@ function multi_tile:mouse_pressed(editor)
 	if(editor.focus:get()~=self.id) then editor.focus:gain(self.id) end
 	gt_widget.mouse_pressed(self, editor)
 	local center=editor:get_center_screen()
-	local w, h=editor.sys.map.tileset.image:getWidth()+(editor.sys.map.tileset.tile_width*4), editor.sys.map.tileset.image:getHeight()+(editor.sys.map.tileset.tile_height*4)
+	local w, h=editor.sys.map.tileset.image:getWidth()+(editor.sys.map.tileset.tile_width*4), editor.sys.map.tileset.image:getHeight()
 	local x, y=center.x-(w/2), center.y-(h/2)
 	self.modal=gt_transition("slidedown", x, y, w, h, editor.window_color, editor.frame_color, editor)	
 	self.modal:open()
@@ -38,7 +38,7 @@ function multi_tile:get_singular_tile(editor)
 	mouse.x=editor.mouse.x-(editor.sys.map.tileset.tile_width*2)
 	mouse.y=editor.mouse.y-(editor.sys.map.tileset.tile_height*2)
 	local center=editor:get_center_screen()
-	local grid=editor.sys.map.tileset:select_grid_layout(center.x, center.y+self.modal.y)
+	local grid=editor.sys.map.tileset:select_grid_layout(center.x, (center.y+self.modal.y)-(editor.sys.map.tileset.image:getHeight()/2))
 	for i, v in ipairs(grid.hover_check) do
 				if(editor:check_hover(mouse, v)) then
 					editor.selected.tile=v.id
@@ -128,6 +128,7 @@ function multi_tile:draw(editor)
 		if(self.modal.opened) then self.hover:draw() end
 	end
 	gt_widget.draw(self, editor)
+	love.graphics.print(self.modal.y .. "  " .. (center.y+self.modal.y), 100, 200)
 end
 
 return multi_tile

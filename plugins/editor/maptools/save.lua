@@ -6,7 +6,7 @@ function save:init(editor, x, y, id)
 	local center=editor:get_center_screen()
 	self.save=gt_transition("open", center.x-60, center.y-25, 60, 25,  editor.window_color, editor.frame_color, editor)
 	self.working_layer=1
-	self.weight=1
+	self.weight=2
 	self.save_do=false
 	self.tile={width=editor.sys.map.tileset.tile_width, height=editor.sys.map.tileset.tile_height, draw=false, scale=editor.sys.scale}
 	self:add_button(editor, "save.png")
