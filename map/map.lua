@@ -18,6 +18,11 @@ function gt_map:set_tile(tilenumber, layer, x, y) -- map positions.
 	self.layers[layer]:set_tile(tilenumber, x, y)
 end
 
+function gt_map:flood_fill(tilenumber, layer, x, y) -- map positions.
+	self.layers[layer]:flood_fill(tilenumber, x, y)
+end
+
+
 function gt_map:get_tile(layer, x, y) -- map positions.
 	return self.layers[layer]:get_tile(x, y)
 end

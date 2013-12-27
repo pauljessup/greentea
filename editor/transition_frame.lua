@@ -12,24 +12,24 @@ function gt_transition:init(transition, x, y, w, h, col, outline, editor)
 	self.closing=false
 	gt_frame.init(self, x, y, w, h, col, outline)
 	self.hidden=true
-	self:get_starting()
+	self:get_starting(editor)
 end
 
-function gt_transition:open()
+function gt_transition:open(editor)
 	self.closed=false
 	self.opening=true
 	self.hidden=false
-	self:get_starting()
+	self:get_starting(editor)
 end
 
-function gt_transition:close()
+function gt_transition:close(editor)
 	self.opened=false
 	self.closing=true
 	self.hidden=false
-	self:get_ending()
+	self:get_ending(editor)
 end
 
-function gt_transition:get_starting()
+function gt_transition:get_starting(editor)
 	self.targetx=self.original.x
 	self.targety=self.original.y
 	self.targeth=self.original.h
@@ -41,13 +41,13 @@ function gt_transition:get_starting()
 	elseif(self.transition=="slideleft") then
 		self.x=0-self.width
 	elseif(self.transition=="slideright") then
-		self.x=self.camera.width+self.width
+		self.x=(love.window.getWidth()/editor.sys.scale.x)+self.width
 	elseif(self.transition=="open") then
 		self.height=0
 	end
 end
 
-function gt_transition:get_ending()
+function gt_transition:get_ending(editor)
 	if(self.transition=="slideup") then
 		self.targety=self.camera_height+self.height
 	elseif(self.transition=="slidedown") then
@@ -55,7 +55,7 @@ function gt_transition:get_ending()
 	elseif(self.transition=="slideleft") then
 		self.targetx=0-self.width
 	elseif(self.transition=="slideright") then
-		self.targetx=self.camera.width+self.width
+		self.targetx=(love.window.getWidth()/editor.sys.scale.x)+self.width
 	elseif(self.transition=="open") then
 		self.height=0
 	end

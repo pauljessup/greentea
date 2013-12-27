@@ -52,6 +52,26 @@ function gt_layer:get_value(value)
 	return self.values[value]
 end
 
+function gt_layer:do_flood_fill(value, x, y, tochange)
+			if(x<2) then return end if(y<2) then return end
+			if(x>=self.width-2) then return end
+			if(y>=self.height-2) then return end
+			
+			if self:get_tile(x,y) == value then return  end
+			if self:get_tile(x,y) ~= tochange then return end
+			
+			self:set_tile(value, x, y)
+			self:do_flood_fill(value, x-1,y,tochange)
+			self:do_flood_fill(value, x+1,y,tochange)
+			self:do_flood_fill(value, x,y+1,tochange)			
+			self:do_flood_fill(value, x,y-1,tochange)
+end
+
+function gt_layer:flood_fill(value, x, y)
+	tochange = self:get_tile(x,y) 
+	self:do_flood_fill(value, x, y, tochange)
+end
+
 function gt_layer:set_all(original_tile, new_tile)
 	local mx, my=0,0
 	while my<height do
@@ -70,7 +90,8 @@ end
 
 
 function gt_layer:get_tile(x, y)
-	if(self.map[y][x]~=nil) then  return self.tileset:get(self.map[y][x]) else return 1 end
+	if(self.map[y]~=nil) then  return self.tileset:get(self.map[y][x]) else return 0 end
+	if(self.map[y][x]~=nil) then  return self.tileset:get(self.map[y][x]) else return 0 end
 end
 
 function gt_layer:change_tile_values(id, opacity, values)

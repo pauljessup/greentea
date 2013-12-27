@@ -32,6 +32,7 @@ end
 
 function gt_widget:lose_focus(editor)
 	self.focus=false
+	self.button.active=false
 	editor.focus:lose()
 	return editor
 end
@@ -63,6 +64,18 @@ function gt_widget:map_hover(editor)
 return editor
 end
 
+function gt_widget:tool_tip_draw(editor)
+	if(self.is_hover) then 
+		self.tx=self.x
+		if((self.x+5+editor.font.font:getWidth(self.tooltip))>(love.window.getWidth()/editor.sys.scale.x)) then
+			self.tx=self.tx-(editor.font.font:getWidth(self.tooltip))
+			self.hover_tip.x=self.tx
+		end
+		self.hover_tip:draw()
+		love.graphics.print(self.tooltip, self.tx+5, self.y-5) self.is_hover=false 
+	end
+end
+
 function gt_widget:draw(editor)
 	if(self.button~=nil) and (not self.button.hidden) then
 			love.graphics.draw(self.button.image, self.x, self.y)
@@ -71,9 +84,5 @@ function gt_widget:draw(editor)
 					love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 					love.graphics.setColor(255, 255, 255, 255)		   
 			end
-	end
-	if(self.is_hover) then 
-		self.hover_tip:draw()
-		love.graphics.print(self.tooltip, self.x+5, self.y-5) self.is_hover=false 
 	end
 end

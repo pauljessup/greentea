@@ -1,5 +1,17 @@
 gt_editor=Class{}
 
+function gt_editor:lose_focus()
+	if(self.focus:get()) then
+		self.tools[self.focus:get()].button.active=false
+		self.focus:lose()
+	end
+end
+
+function gt_editor:gain_focus(id)
+	self.focus:gain(id)
+	self.tools[self.focus:get()].button.active=true	
+end
+
 function gt_editor:init(sys)
 	self.plugin_directory=sys.plugin_directory .. "/editor"
 	self.asset_directory=self.plugin_directory .. "/assets"
@@ -7,7 +19,7 @@ function gt_editor:init(sys)
 	self.selected.tile=1
 	self.selected.tiles={}
 	self.selected.tiles.use=false
-	self.selected.layer=2
+	self.selected.layer=1
 	self.focus_tool=1
 	
 	self.mouse={x=0, y=0, held=false, holding=0}
@@ -45,9 +57,10 @@ function gt_editor:init(sys)
 	self.toolset={}
 	local x, y=self:calculate_location("right", 100, 0)
 	table.insert(self.toolset, gt_transition("slidedown", -5, -5, (love.window.getWidth()/self.sys.scale.x)+50, 35,  self.window_color, self.frame_color, self))	
-	table.insert(self.toolset, gt_toolbar("maptools", "slidedown", x, y, "horizontal", 6, self, {r=0, g=0, b=0, alpha=0}, {r=0, g=0, b=0, alpha=0}))
-	
+	table.insert(self.toolset, gt_toolbar("maptools", "slidedown", x, y, "horizontal", 6, self, {r=0, g=0, b=0, alpha=0}, {r=0, g=0, b=0, alpha=0}))	
 	table.insert(self.toolset, gt_toolbar("tiletools", "slideleft", 5, 50, "vertical", 6, self))	
+	local x, y=self:calculate_location("right", 40, 0)	
+	table.insert(self.toolset, gt_toolbar("layertools", "slideright", x, 50, "vertical", 6, self))
 end
 
 function gt_editor:calculate_location(location, x, y)
@@ -62,8 +75,12 @@ function gt_editor:run()
 		love.mouse.setVisible(self.edit_show_mouse)
 		self.logo.fade=true 
 		self.logo.fade_in=true 
-		self.toolset[1]:open()
-		self.toolset[2]:open()
+		self.toolset[1]:open(self)
+		self.toolset[2]:open(self)
+		self.toolset[4]:open(self)	
+		for i,v in ipairs(self.tools) do
+			if(v.tooltip=="place tiles") then v:mouse_pressed(self) end
+		end
 		if(self.font~=nil) then love.graphics.setFont(self.font.font) end
 end
 
@@ -71,7 +88,8 @@ function gt_editor:close()
 		love.mouse.setVisible(self.show_mouse)
 		self.logo.fade=false 
 		self.logo.fade_in=false 
-		for i,v in ipairs(self.toolset) do v:close() end
+		for i,v in ipairs(self.toolset) do v:close(self) end
+		for i,v in ipairs(self.toolset) do v:close(self) end
 		if(self.font~=nil) then love.graphics.setFont(self.font.old) end
 end
 
@@ -124,8 +142,9 @@ function gt_editor:draw()
 		love.graphics.setColor(255, 255, 255, 255)		
 	end
 		love.graphics.print("editing " .. self.sys.map.name .. "  map", 5, 2)
-		love.graphics.print("tile  x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y, 5, 12)
-		
+		percentage=math.floor((self.sys.map.layers[self.selected.layer].opacity/255)*(100/1))
+		love.graphics.print("layer: " .. self.selected.layer .. "      opacity: " .. percentage .. "      x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y, 5, 12)
+	for i,v in ipairs(self.tools) do v:tool_tip_draw(self) end		
 end
 
 function gt_editor:get_center_screen()
@@ -141,19 +160,19 @@ function gt_editor:check_mouse()
 		
 		if(self.mouse.x<1) then 
 			self.mouse.x=1 
-			self.sys.map:scroll(-1, 0)
+			self.sys.map:scroll(-.2, 0)
 		end
 		if(self.mouse.y<=1) then
 			self.mouse.y=1
-			if(self.sys.map.camera.y>self.sys.map.tileset.tile_height) then			
-				self.sys.map:scroll(0, -1)
+			if(math.floor(self.sys.map.camera.y)>self.sys.map.tileset.tile_height) then			
+				self.sys.map:scroll(0, -.2)
 			end
 		end
 		if(self.mouse.x>((love.window.getWidth()/self.sys.scale.x)-8)) then
-			self.sys.map:scroll(1, 0)
+			self.sys.map:scroll(.2, 0)
 		end
 		if(self.mouse.y>((love.window.getHeight()/self.sys.scale.y)-8)) then
-			self.sys.map:scroll(0, 1)
+			self.sys.map:scroll(0, .2)
 		end		
 		self.mouse.width, self.mouse.height=self.sys.map.tileset.tile_width*self.sys.scale.x, self.sys.map.tileset.tile_height*self.sys.scale.y
 		self.mouse.widget={}

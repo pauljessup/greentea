@@ -12,7 +12,7 @@ end
 function tile:mouse_pressed(editor)
 	editor.toolset[3]:open()
 	for i,v in ipairs(editor.toolset) do
-		if(i~=3 and i~=1 and i~=2) then v.open() end
+		--if(i~=3 and i~=1 and i~=2 i~=4) then v:close() end
 	end
 	for i,v in ipairs(editor.tools) do
 		if(v.tooltip=="place a tile") then editor=v:mouse_pressed(editor) end

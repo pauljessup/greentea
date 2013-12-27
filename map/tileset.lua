@@ -108,8 +108,10 @@ function gt_tileset:save_table()
 end
 
 function gt_tileset:draw(id, x, y, opacity)
-	id=self:get_anim_frame(id)
-	self.tiles[id]:draw(self, x, y, opacity)
+	if(id~=0) then
+		id=self:get_anim_frame(id)
+		self.tiles[id]:draw(self, x, y, opacity)
+	end
 end
 
 function gt_tileset:get(id)
