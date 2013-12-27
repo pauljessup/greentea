@@ -16,17 +16,6 @@ function layernew:mouse_pressed(editor)
 				self.button.active=true
 			end
 		end
-	--[[
-		editor.sys:add_layer(
-		{
-			id=#editor.sys.map.layers,
-			opacity=255,
-			speed=1,
-			default_tile=0,
-		})
-		self.button.active=true
-		editor.selected.layer=#editor.sys.map.layers
-	--]]
 	end
 return editor
 end

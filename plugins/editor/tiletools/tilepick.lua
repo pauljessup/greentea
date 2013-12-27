@@ -22,7 +22,8 @@ function multi_tile:mouse_pressed(editor, msg)
 	if(editor.focus:get()~=self.id) then editor.focus:gain(self.id) end
 	gt_widget.mouse_pressed(self, editor)
 	local center=editor:get_center_screen()
-	local w, h=editor.sys.map.tileset.image:getWidth()+(editor.sys.map.tileset.tile_width*4), editor.sys.map.tileset.image:getHeight()+(editor.sys.map.tileset.tile_width*2)
+	local tileset=editor.sys.map.layers[editor.selected.layer].tileset
+	local w, h=tileset.image:getWidth()+(tileset.tile_width*4), tileset.image:getHeight()+(tileset.tile_width*2)
 	local x, y=center.x-(w/2), center.y-(h/2)
 	self.modal=gt_transition("open", x, y, w, h, editor.window_color, editor.frame_color, editor)	
 	self.modal:open()
@@ -36,11 +37,12 @@ end
 
 function multi_tile:get_singular_tile(editor)
 	local hx, hy=0,0
+	local tileset=editor.sys.map.layers[editor.selected.layer].tileset	
 	mouse=editor.mouse
-	mouse.x=editor.mouse.x-(editor.sys.map.tileset.tile_width*2)
-	mouse.y=editor.mouse.y-(editor.sys.map.tileset.tile_height*2)
+	mouse.x=editor.mouse.x-(tileset.tile_width*2)
+	mouse.y=editor.mouse.y-(tileset.tile_height*2)
 	local center=editor:get_center_screen()
-	local grid=editor.sys.map.tileset:select_grid_layout(center.x, self.modal.y)
+	local grid=tileset:select_grid_layout(center.x, self.modal.y)
 	for i, v in ipairs(grid.hover_check) do
 				if(editor:check_hover(mouse, v)) then
 					editor.selected.tile=v.id
@@ -52,9 +54,10 @@ function multi_tile:get_singular_tile(editor)
 end
 
 function multi_tile:get_multiple_tiles(editor)
-	local tile_height, tile_width=editor.sys.map.tileset.tile_width, editor.sys.map.tileset.tile_height	
+	local tileset=editor.sys.map.layers[editor.selected.layer].tileset
+	local tile_height, tile_width=tileset.tile_width, tileset.tile_height	
 	local center=editor:get_center_screen()
-	local grid=editor.sys.map.tileset:select_grid_layout(center.x, self.modal.y)	editor.selected.tiles={}
+	local grid=tileset:select_grid_layout(center.x, self.modal.y)	editor.selected.tiles={}
 	local x=math.floor((self.hover.x-grid.x)/tile_width)-1
 	local y=math.floor((self.hover.y-grid.y)/tile_height)
 	local w=math.floor(self.hover.width/tile_width)
@@ -72,8 +75,9 @@ function multi_tile:map_pressed(editor)
 			self.select.start=true
 			local hx, hy=0,0
 			local mouse=editor.mouse
-			mouse.x=editor.mouse.x-(editor.sys.map.tileset.tile_width*2)
-			editor.mouse.y=editor.mouse.y-(editor.sys.map.tileset.tile_height*2)
+			local tileset=editor.sys.map.layers[editor.selected.layer].tileset
+			mouse.x=editor.mouse.x-(tileset.tile_width*2)
+			editor.mouse.y=editor.mouse.y-(tileset.tile_height*2)
 			local center=editor:get_center_screen()
 			local grid=editor.sys.map.tileset:select_grid_layout(center.x, self.modal.y)	
 			editor.selected.modal=self.modal
@@ -89,13 +93,14 @@ return editor
 end
 
 function multi_tile:map_hover(editor)
+	local tileset=editor.sys.map.layers[editor.selected.layer].tileset
 	if(self.select.start) then
 			if(editor.mouse.holding==0) then
 				self.select.start=false
 				self:get_multiple_tiles(editor)
 				self.old_mouse=nil
-				self.hover.width=editor.sys.map.tileset.tile_width
-				self.hover.height=editor.sys.map.tileset.tile_height
+				self.hover.width=tileset.tile_width
+				self.hover.height=tileset.tile_height
 				editor.focus:lose() 
 				self.button.active=false	
 				self.modal:close()
@@ -103,10 +108,10 @@ function multi_tile:map_hover(editor)
 	end
 					local hx, hy=0,0
 					local mouse=editor.mouse	
-					mouse.x=editor.mouse.x-(editor.sys.map.tileset.tile_width*editor.sys.scale.x)
-					mouse.y=editor.mouse.y-(editor.sys.map.tileset.tile_height*editor.sys.scale.y)	
+					mouse.x=editor.mouse.x-(tileset.tile_width*editor.sys.scale.x)
+					mouse.y=editor.mouse.y-(tileset.tile_height*editor.sys.scale.y)	
 					local center=editor:get_center_screen()
-					local grid=editor.sys.map.tileset:select_grid_layout(center.x, self.modal.y)
+					local grid=tileset:select_grid_layout(center.x, self.modal.y)
 					for i, v in ipairs(grid.hover_check) do
 								if(editor:check_hover(mouse, v)) then
 									self.hover.x=v.x
@@ -126,7 +131,8 @@ function multi_tile:draw(editor)
 	local center=editor:get_center_screen()
 	self.modal:draw()
 	if(self.modal.opened) then 
-		editor.sys.map.tileset:select_grid(center.x, self.modal.y)	
+		local tileset=editor.sys.map.layers[editor.selected.layer].tileset
+		tileset:select_grid(center.x, self.modal.y)	
 		self.hover:draw()
 		if(self.msg~=nil) then love.graphics.print(self.msg, self.modal.x+5, self.modal.y+5) end
 	end

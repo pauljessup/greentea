@@ -6,7 +6,6 @@ function gt_tileset:init(tileset_table)
 	self.tile_height=tileset_table.tile_height
 	self.tile_width=tileset_table.tile_width
 	self.anims=tileset_table.anims
---------------------------------------------
 	if(tileset_table.tiles==nil) then self.tiles={} else self.tiles=tileset_table.tiles end
 	self.quads={}
 	self.image_name=tileset_table.image
@@ -45,7 +44,7 @@ function gt_tileset:select_grid(x, y)
 	local grid_select={}
 	for i,v in ipairs(self.tiles) do		
 		x=imagex+ox
-		self:draw(i, x, y, 255)
+		if(imagex<width) then self:draw(i, x, y, 255) end
 		
 		table.insert(grid_select, {x=x,y=y,i,height=self.tile_height,width=self.tile_width})
 		if(imagex==width) then 

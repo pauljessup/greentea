@@ -113,6 +113,11 @@ function green_tea:new_map(map)
 				self.editor=gt_editor(self)
 		end
 	end	
+	if(map.template~=nil) then
+		local template_class=love.filesystem.load(self.plugin_directory .. "/templates/" .. map.template .. ".lua")()
+		local template=template_class(self)
+		self=template:create(self)
+	end	
 end
 
 function green_tea:load_camera(camera)
