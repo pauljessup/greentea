@@ -2,7 +2,7 @@ local layerup=Class{}
 layerup:include(gt_widget)
 
 function layerup:init(editor, x, y, id)
-	gt_widget.init(self, editor, x, y, id, "mover up a layer")
+	gt_widget.init(self, editor, x, y, id, "move up a layer")
 	self.weight=-1
 	self:add_button(editor, "layerup.png")
 end

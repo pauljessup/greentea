@@ -3,8 +3,9 @@ multi_tile:include(gt_widget)
 
 function multi_tile:init(editor, x, y, id)
 	editor.window_color.alpha=150
-	editor.frame_color.alpha=190			
+	editor.frame_color.alpha=190
 	gt_widget.init(self, editor, x, y, id, "pick a tile or group of tiles to use")
+	self.name="tilepick"
 	self.modal=gt_transition("slideleft", 0, 0, editor.sys.map.tileset.image:getWidth()+(editor.sys.map.tileset.tile_width*4), editor.sys.map.tileset.image:getHeight(), editor.window_color, editor.frame_color, editor)
 	self.hover=gt_frame(0, 0, editor.sys.map.tileset.tile_width, editor.sys.map.tileset.tile_height, {r=216, g=194, b=92, alpha=100}, {r=133, g=120, b=57, alpha=175})
 	self.weight=3
@@ -16,7 +17,8 @@ function multi_tile:init(editor, x, y, id)
 	self.select.start=false
 end
 
-function multi_tile:mouse_pressed(editor)
+function multi_tile:mouse_pressed(editor, msg)
+	self.msg=msg
 	if(editor.focus:get()~=self.id) then editor.focus:gain(self.id) end
 	gt_widget.mouse_pressed(self, editor)
 	local center=editor:get_center_screen()
@@ -126,6 +128,7 @@ function multi_tile:draw(editor)
 	if(self.modal.opened) then 
 		editor.sys.map.tileset:select_grid(center.x, self.modal.y)	
 		self.hover:draw()
+		if(self.msg~=nil) then love.graphics.print(self.msg, self.modal.x+5, self.modal.y+5) end
 	end
 	gt_widget.draw(self, editor)
 end

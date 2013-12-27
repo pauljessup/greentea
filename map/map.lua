@@ -1,5 +1,12 @@
 gt_map=Class{}
 
+function gt_map:using_editor(use, editor)
+	self.editor=use
+	for i,v in ipairs(self.objects) do
+		v:editor_init(editor)
+	end
+end
+
 function gt_map:get_layer_cameras()
 	local layers={}
 	for i,v in self:get_layers() do
@@ -172,7 +179,13 @@ end
 
 function gt_map:object_draw(layer)
 	for i, o in ipairs(self.objects) do
-		if(o.layer==layer) and (not o.hidden) then o:draw(self:get_layer(layer)) end 
+		if(o.layer==layer) and (not o.hidden) then 
+			if(self.editor) then
+				o:editor_draw(self:get_layer(layer))
+			else
+				o:draw(self:get_layer(layer))
+			end
+		end 
 	end
 end
 

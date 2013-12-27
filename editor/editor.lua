@@ -71,7 +71,7 @@ function gt_editor:calculate_location(location, x, y)
 	return x, y
 end
 
-function gt_editor:run()
+function gt_editor:run(sys)
 		love.mouse.setVisible(self.edit_show_mouse)
 		self.logo.fade=true 
 		self.logo.fade_in=true 
@@ -82,15 +82,16 @@ function gt_editor:run()
 			if(v.tooltip=="place tiles") then v:mouse_pressed(self) end
 		end
 		if(self.font~=nil) then love.graphics.setFont(self.font.font) end
+		self.sys.map:using_editor(true, self)
 end
 
-function gt_editor:close()
+function gt_editor:close(sys)
 		love.mouse.setVisible(self.show_mouse)
 		self.logo.fade=false 
 		self.logo.fade_in=false 
 		for i,v in ipairs(self.toolset) do v:close(self) end
-		for i,v in ipairs(self.toolset) do v:close(self) end
 		if(self.font~=nil) then love.graphics.setFont(self.font.old) end
+		self.sys.map:using_editor(false, self)		
 end
 
 function gt_editor:update(dt, sys)
@@ -141,7 +142,7 @@ function gt_editor:draw()
 		love.graphics.draw(self.logo.image, center.x, center.y)
 		love.graphics.setColor(255, 255, 255, 255)		
 	end
-		love.graphics.print("editing " .. self.sys.map.name .. "  map", 5, 2)
+		love.graphics.print("editing " .. self.sys.map.name .. "  map      size: " .. self.sys.map.width .. "x" .. self.sys.map.height, 5, 2)
 		percentage=math.floor((self.sys.map.layers[self.selected.layer].opacity/255)*(100/1))
 		love.graphics.print("layer: " .. self.selected.layer .. "      opacity: " .. percentage .. "      x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y, 5, 12)
 	for i,v in ipairs(self.tools) do v:tool_tip_draw(self) end		

@@ -64,14 +64,14 @@ end
 
 function green_tea:run_editor()
 	if(self.has_editor) then
-		self.editor:run()
+		self.editor:run(self)
 		self.editing=true
 	end
 end
 
 function green_tea:stop_editor()
 	if(self.has_editor) then
-		self.editor:close()
+		self.editor:close(self)
 		self.editing=false
 	end
 end

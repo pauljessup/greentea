@@ -52,19 +52,24 @@ function gt_layer:get_value(value)
 	return self.values[value]
 end
 
-function gt_layer:do_flood_fill(value, x, y, tochange)
-			if(x<2) then return end if(y<2) then return end
-			if(x>=self.width-2) then return end
-			if(y>=self.height-2) then return end
+function gt_layer:do_flood_fill(value, x, y, tochange, ox, oy)
+			if(ox==nil) then ox=x end if(oy==nil) then oy=y end
+			if(x<1) then return end if(y<1) then return end
+			--if(x>=self.width-2) then return end
+			--if(y>=self.height-2) then return end
+			if(x>ox+50) then return end
+			if(y>ox+50) then return end
+			if(x>=self.width) then return end
+			if(y>=self.height) then return end			
 			
 			if self:get_tile(x,y) == value then return  end
 			if self:get_tile(x,y) ~= tochange then return end
 			
 			self:set_tile(value, x, y)
-			self:do_flood_fill(value, x-1,y,tochange)
-			self:do_flood_fill(value, x+1,y,tochange)
-			self:do_flood_fill(value, x,y+1,tochange)			
-			self:do_flood_fill(value, x,y-1,tochange)
+			self:do_flood_fill(value, x-1,y,tochange, ox, oy)
+			self:do_flood_fill(value, x+1,y,tochange, ox, oy)
+			self:do_flood_fill(value, x,y+1,tochange, ox, oy)			
+			self:do_flood_fill(value, x,y-1,tochange, ox, oy)
 end
 
 function gt_layer:flood_fill(value, x, y)

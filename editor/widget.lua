@@ -2,6 +2,7 @@ gt_widget=Class{}
 
 function gt_widget:init(editor, x, y, id, tooltip)
 	self.weight=1
+	self.name=""
 	self.id=id
 	self.x, self.y=x,y
 	self.width, self.height=0,0

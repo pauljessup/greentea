@@ -2,7 +2,7 @@ local layerdown=Class{}
 layerdown:include(gt_widget)
 
 function layerdown:init(editor, x, y, id)
-	gt_widget.init(self, editor, x, y, id, "mover down a layer")
+	gt_widget.init(self, editor, x, y, id, "move down a layer")
 	self.weight=1
 	self:add_button(editor, "layerdown.png")
 end
