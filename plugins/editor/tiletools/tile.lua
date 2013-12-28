@@ -17,6 +17,7 @@ end
 
 function tile_tool:map_pressed(editor)
 	local mapx,mapy=editor.mouse.map.x, editor.mouse.map.y
+	local tileset=editor.sys.map.layers[editor.selected.layer].tileset
 	if(editor.mouse.pressed=="l") then
 			if(not editor.selected.tiles.use) then
 				editor.sys.map:set_tile(editor.selected.tile, editor.selected.layer, mapx, mapy)
@@ -24,7 +25,7 @@ function tile_tool:map_pressed(editor)
 				local ox,oy=editor.selected.tiles.x, editor.selected.tiles.y
 				local x, y=1,1
 				local center=editor:get_center_screen()
-				local grid=editor.sys.map.tileset:select_grid_layout(center.x, center.y+editor.selected.modal.y)			
+				local grid=tileset:select_grid_layout(center.x, center.y+editor.selected.modal.y)			
 				
 				while y<=editor.selected.tiles.h do
 					while x<=editor.selected.tiles.w do
