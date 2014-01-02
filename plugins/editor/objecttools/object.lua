@@ -12,39 +12,24 @@ end
 function object_tool:mouse_pressed(editor)
 	if(editor.focus:get()~=self.id) then editor:lose_focus() editor:gain_focus(self.id) self.button.active=true end
 	gt_widget.mouse_pressed(self, editor)
+	editor.selected.object="placeholder"
 return editor
 end
 
 function object_tool:map_pressed(editor)
 	local mapx,mapy=editor.mouse.map.x, editor.mouse.map.y
-	local tileset=editor.sys.map.layers[editor.selected.layer].tileset
-	if(editor.mouse.pressed=="l") then
-			if(not editor.selected.tiles.use) then
-				editor.sys.map:set_tile(editor.selected.tile, editor.selected.layer, mapx, mapy)
-			else
-				local ox,oy=editor.selected.tiles.x, editor.selected.tiles.y
-				local x, y=1,1
-				local center=editor:get_center_screen()
-				local grid=tileset:select_grid_layout(center.x, center.y+editor.selected.modal.y)			
-				
-				while y<=editor.selected.tiles.h do
-					while x<=editor.selected.tiles.w do
-							if(grid.tile_map[y+oy][x+ox]~=nil) then 
-								editor.sys.map:set_tile(grid.tile_map[y+oy][x+ox], editor.selected.layer, mapx+x, mapy+y) 
-							else
-								editor.sys.map:set_tile(1, editor.selected.layer, mapx+x, mapy+y)
-							end
-							x=x+1
-					end
-					x=1
-					y=y+1
-				end
-			end
-	else
-		editor.selected.tile=editor.sys.map:get_tile(editor.selected.layer, mapx, mapy)
-		editor.selected.tiles.use=false
+	editor.sys:add_object({id=editor.selected.object,
+						x=mapx*editor.sys.map.tileset.tile_width,
+						y=mapy*editor.sys.map.tileset.tile_width,
+						opacity=255,
+						speed=1,
+						layer=editor.selected.layer
+						})
+	
+	for i,v in ipairs(editor.sys.map.objects) do
+		v:editor_init(editor)
 	end
-return editor
+	return editor
 end
 
 function object_tool:map_hover(editor)

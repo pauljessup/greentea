@@ -7,13 +7,13 @@ function gt_object:init(object_table)
 	self.hidden=object_table.hidden
 	self.x=object_table.x
 	self.y=object_table.y
-	self.w=object_table.width
-	self.h=object_table.height
 	self.filename=object_table.image
 	if(self.filename~=nil) then 
 		self.image=love.graphics.newImage(self.filename) 
+		self.w=self.image:getWidth()
+		self.h=self.image:getHeight()
 	end
-		self.editor_image="placeholder.png"
+	self.editor_image="placeholder.png"
 	self.speed=object_table.speed
 	self.opacity=object_table.opacity
 	self.layer=object_table.layer
@@ -64,7 +64,7 @@ function gt_object:editor_init(editor)
 end
 
 function gt_object:editor_draw(layer)
-	if(self.filename~=nil) then
+	if(self.editor_image~=nil) then
 		local x, y=self.x-layer.camera.x, self.y-layer.camera.y
 		love.graphics.setColor(255, 255, 255, self.opacity)
 		love.graphics.draw(self.edit_image, x, y)
