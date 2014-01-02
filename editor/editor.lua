@@ -212,6 +212,7 @@ function gt_editor:check_button()
 		end
 end
 
+
 function gt_editor:check_hover(mouse, widget)
  return mouse.x < widget.x+widget.width and
          widget.x < self.mouse.x+mouse.width and

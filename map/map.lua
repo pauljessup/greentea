@@ -140,6 +140,8 @@ function gt_map:add_object(object)
 			if(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. object.type .. ".lua")) then
 				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. object.type .. ".lua")()
 				table.insert(self.objects, object_class(object))
+			elseif(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. "/" .. self.name ..  "/" .. object.type .. ".lua")) then
+			
 			else
 				table.insert(self.objects, gt_object(object))			
 			end	
@@ -177,6 +179,34 @@ function gt_map:get_layers()
 	return ipairs(self.layers)
 end
 
+function gt_map:get_object(id)
+	return self.objects[id]
+end
+
+function gt_map:set_object(id, object)
+	self.objects[id]=object
+end
+
+--checks to see if any objects collide with 
+--supplied object. Object can be any table at all
+--it just needs to have a height, width, x, y layer.
+--if nothing hits, returns false.
+--if something hits, returns true
+--and then it returns the id of the collision hit
+--so you can access it directly with map:get_object(i)
+function gt_map:object_collide(object)
+	for i, o in ipairs(self.objects) do
+			if(o:check_collision(object)) then return true, i end
+	end
+	return false
+end
+	
+
+function gt_map:collide(object)
+
+return object
+end
+	
 function gt_map:object_draw(layer)
 	for i, o in ipairs(self.objects) do
 		if(o.layer==layer) and (not o.hidden) then 
@@ -194,7 +224,7 @@ function gt_map:update(dt)
 		i:update(dt)
 	end
 	for l, i in self:get_objects() do
-		i:update(self:get_layer(i.layer), dt)
+		self=i:update(self, dt)
 	end
 end
 

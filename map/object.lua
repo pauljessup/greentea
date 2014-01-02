@@ -10,13 +10,23 @@ function gt_object:init(object_table)
 	self.filename=object_table.image
 	if(self.filename~=nil) then 
 		self.image=love.graphics.newImage(self.filename) 
-		self.w=self.image:getWidth()
-		self.h=self.image:getHeight()
+		self.width=self.image:getWidth()
+		self.height=self.image:getHeight()
 	end
 	self.editor_image="placeholder.png"
 	self.speed=object_table.speed
 	self.opacity=object_table.opacity
 	self.layer=object_table.layer
+	self.values=object_table.values
+end
+
+-- where object has a h/w/x/y and layer properties
+function gt_object:check_collision(object)
+ if(object.layer~=self.layer) then return false end
+ return object.x < self.x+self.width and
+         self.x < self.object.x+object.width and
+         object.y < self.y+self.height and
+         self.y < object.y+object.height	
 end
 
 function gt_object:show()
@@ -43,11 +53,13 @@ function gt_object:save_table()
 	l.layer=self.layer
 	l.hidden=self.hidden
 	l.image=self.filename
+	l.values=self.values
 	return l
 end
 
-function gt_object:update(layer, dt)
+function gt_object:update(map, dt)
 	-- I am just the default.
+	return map
 end
 
 function gt_object:draw(layer)
@@ -60,7 +72,17 @@ function gt_object:draw(layer)
 end
 
 function gt_object:editor_init(editor)
-	self.edit_image=love.graphics.newImage(editor.asset_directory .. "/" .. self.editor_image) 
+	if(self.editor_image==nil) and(self.filename~=nil) then
+		self.editor_image=self.filename
+	end
+	
+	if(self.filename==nil) then
+		self.filename=editor.asset_directory .. "/" .. self.editor_image
+		self.image=love.graphics.newImage(self.filename) 
+		self.w=self.image:getWidth()
+		self.h=self.image:getHeight()		
+	end
+	self.edit_image=love.graphics.newImage(editor.asset_directory .. "/" .. self.editor_image)	
 end
 
 function gt_object:editor_draw(layer)
