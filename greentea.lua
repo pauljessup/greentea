@@ -115,7 +115,7 @@ function green_tea:new_map(map)
 	end	
 	if(map.template~=nil) then
 		local template_class=love.filesystem.load(self.plugin_directory .. "/templates/" .. map.template .. ".lua")()
-		local template=template_class(self)
+		local template=template_class(map)
 		self=template:create(self)
 	end	
 end

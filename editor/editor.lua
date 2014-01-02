@@ -144,7 +144,7 @@ function gt_editor:draw()
 	end
 		love.graphics.print("editing " .. self.sys.map.name .. "  map      size: " .. self.sys.map.width .. "x" .. self.sys.map.height, 5, 2)
 		percentage=math.floor((self.sys.map.layers[self.selected.layer].opacity/255)*(100/1))
-		love.graphics.print("layer: " .. self.selected.layer .. "      opacity: " .. percentage .. "      x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y, 5, 12)
+		love.graphics.print("layer: " .. self.sys.map.layers[self.selected.layer].id .. " x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y, 5, 12)
 	for i,v in ipairs(self.tools) do v:tool_tip_draw(self) end		
 end
 

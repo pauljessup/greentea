@@ -8,7 +8,7 @@ function layerdown:init(editor, x, y, id)
 end
 
 function layerdown:mouse_pressed(editor)
-	if(editor.mouse.holding<5) then
+	if(editor.mouse.holding<10) then
 		editor.selected.layer=editor.selected.layer-1
 		self.button.active=true
 		if(editor.selected.layer<1) then

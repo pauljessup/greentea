@@ -1,8 +1,9 @@
 local example_template=Class{}
 example_template:include(gt_template)
 
-function example_template:init(greentea)
---do any init'ing here.
+function example_template:init(values)
+	-- we can do whatevs.
+	gt_template.init(self, values)
 end
 
 function example_template:create(greentea)
@@ -15,8 +16,6 @@ function example_template:create(greentea)
 						default_tile=13
 						})
 						
-
-
 		greentea:add_layer({id="ground2", 
 						opacity=255, 
 						speed=1,
