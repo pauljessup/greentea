@@ -22,11 +22,20 @@ end
 
 -- where object has a h/w/x/y and layer properties
 function gt_object:check_collision(object)
+ if(self.width==nil) then self.width=self.image:getWidth() end
+ if(self.height==nil) then self.height=self.image:getHeight() end
+ 
  if(object.layer~=self.layer) then return false end
+ 
  return object.x < self.x+self.width and
-         self.x < self.object.x+object.width and
+         self.x < object.x+object.width and
          object.y < self.y+self.height and
          self.y < object.y+object.height	
+end
+
+function gt_object:collide(map, object)
+	
+	return map, object
 end
 
 function gt_object:show()
