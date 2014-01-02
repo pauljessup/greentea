@@ -10,14 +10,15 @@ function object:init(editor, x, y, id)
 end
 
 function object:mouse_pressed(editor)	
-	editor.toolset[3]:close()
+	editor=editor.toolset[3]:close(editor)
+	editor=editor.toolset[5]:open(editor)
 	for i,v in ipairs(editor.tools) do
 		if(v.tooltip=="place tiles") then
 			v.button.active=false
 		end
 	end
 	for i,v in ipairs(editor.tools) do
-		if(v.tooltip=="place a object") then editor=v:mouse_pressed(editor) end
+		if(v.tooltip=="place an object") then editor=v:mouse_pressed(editor) end
 	end
 	self.button.active=true
 return editor

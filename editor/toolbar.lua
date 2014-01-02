@@ -46,9 +46,25 @@ function gt_toolbar:init(name, transition, x, y, orientation, padding, editor, c
 	gt_transition.init(self, transition, x, y, tw, th, col, outline, editor)
 end
 
+function gt_toolbar:open(editor)
+	gt_transition.open(self, editor)
+	for i,v in ipairs(self.tools) do
+		editor.tools[v.id].hidden=false
+	end
+	return editor
+end
+
+function gt_toolbar:close(editor)
+	gt_transition.close(self, editor)
+	for i,v in ipairs(self.tools) do
+		editor.tools[v.id].hidden=true
+	end
+	return editor
+end
+
 function gt_toolbar:update(dt, editor)
 	for i,v in ipairs(self.tools) do
-		editor=editor.tools[v.id]:update(dt, editor)
+		if(self.opened) then  editor=editor.tools[v.id]:update(dt, editor) end
 	end
 	gt_transition.update(self, dt)
 	return editor

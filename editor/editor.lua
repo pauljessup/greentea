@@ -61,6 +61,7 @@ function gt_editor:init(sys)
 	table.insert(self.toolset, gt_toolbar("tiletools", "slideleft", 5, 50, "vertical", 6, self))	
 	local x, y=self:calculate_location("right", 40, 0)	
 	table.insert(self.toolset, gt_toolbar("layertools", "slideright", x, 50, "vertical", 6, self))
+	table.insert(self.toolset, gt_toolbar("objecttools", "slideleft", 5, 50, "vertical", 6, self))	
 end
 
 function gt_editor:calculate_location(location, x, y)
@@ -145,7 +146,7 @@ function gt_editor:draw()
 		love.graphics.print("editing " .. self.sys.map.name .. "  map      size: " .. self.sys.map.width .. "x" .. self.sys.map.height, 5, 2)
 		percentage=math.floor((self.sys.map.layers[self.selected.layer].opacity/255)*(100/1))
 		love.graphics.print("layer: " .. self.sys.map.layers[self.selected.layer].id .. " x:" .. self.mouse.map.x .. " y:" .. self.mouse.map.y, 5, 12)
-	for i,v in ipairs(self.tools) do v:tool_tip_draw(self) end		
+	for i,v in ipairs(self.tools) do if(not v.hidden) then v:tool_tip_draw(self) end end		
 end
 
 function gt_editor:get_center_screen()
@@ -222,7 +223,7 @@ function gt_editor:update_tools()
 	local has_focus=false
 	for i,v in ipairs(self.tools) do
 			self:check_mouse()
-			if(self:check_hover(self.mouse.widget, v)) and (not has_focus) then 
+			if(self:check_hover(self.mouse.widget, v)) and (not has_focus) and (not v.hidden) then 
 				if(self.mouse.pressed~=nil) then self=v:mouse_pressed(self) end
 				self=v:mouse_hover(self)
 				has_focus=true

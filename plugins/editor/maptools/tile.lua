@@ -10,7 +10,8 @@ function tile:init(editor, x, y, id)
 end
 
 function tile:mouse_pressed(editor)
-	editor.toolset[3]:open()
+	editor=editor.toolset[3]:open(editor)
+	editor=editor.toolset[5]:close(editor)
 	for i,v in ipairs(editor.tools) do
 		if(v.tooltip=="place objects") then
 			v.button.active=false
