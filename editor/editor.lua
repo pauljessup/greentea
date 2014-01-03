@@ -7,6 +7,7 @@ function gt_editor:lose_focus()
 	end
 end
 
+
 function gt_editor:gain_focus(id)
 	self.focus:gain(id)
 	self.tools[self.focus:get()].button.active=true	
@@ -47,7 +48,7 @@ function gt_editor:init(sys)
 		 self.font.image:setFilter("nearest", "nearest")
 		 self.font.font=love.graphics.newImageFont(self.font.image, self.font.glyphs)
 	end	
-	
+
 	self.sys=sys
 	self.tools={}
 	self.focus=gt_focus()	
@@ -73,6 +74,16 @@ function gt_editor:calculate_location(location, x, y)
 	return x, y
 end
 
+function gt_editor:get_objects(sys, folder)
+	local files = love.filesystem.getDirectoryItems(folder)	
+	for num, name in pairs(files) do
+		if(love.filesystem.isFile(folder .. name)) then
+			table.insert(self.objects, name);
+		end
+	end	
+
+end
+
 function gt_editor:run(sys)
 		love.mouse.setVisible(self.edit_show_mouse)
 		self.logo.fade=true 
@@ -86,6 +97,10 @@ function gt_editor:run(sys)
 		end
 		if(self.font~=nil) then love.graphics.setFont(self.font.font) end
 		self.sys.map:using_editor(true, self)
+		local obj_folder=self.plugin_directory .. "/objects/"
+		local map_folder=obj_folder .. "/" .. sys.map.name .. "/"
+		self:get_objects(sys, obj_folder)
+		self:get_objects(sys, map_folder)		
 end
 
 function gt_editor:close(sys)

@@ -23,7 +23,7 @@ function object_tool:map_pressed(editor)
 
 	local mapx,mapy=editor.mouse.map.x*editor.sys.map.tileset.tile_width, editor.mouse.map.y*editor.sys.map.tileset.tile_height		
 	local tocheck={layer=editor.selected.layer, x=mapx, y=mapy, width=editor.sys.map.tileset.tile_width, height=editor.sys.map.tileset.tile_height}
-	local check_hover={x=editor.mouse.x+10, y=editor.mouse.y, height=editor.mouse.height, width=editor.mouse.width}
+	local check_hover={x=editor.mouse.x, y=editor.mouse.y, height=editor.mouse.height, width=editor.mouse.width}
 
 	hit, target=editor.sys.map:object_collide(tocheck)	
 
@@ -31,12 +31,14 @@ function object_tool:map_pressed(editor)
 			editor=editor.toolset[6]:close(editor)
 			editor.selected.edit_object=nil
 			self.placing=true
+			editor.selected.editing=nil
 	else
-			if editor.mouse.pressed=="l" and not self.placing then
+			if editor.mouse.pressed=="l" and not self.placing and editor.selected.editing==nil  then
 				if(editor.selected.move_object==nil) and editor.selected.edit_object==nil and not hit then
 					self.placing=true
 					local mapx,mapy=editor.mouse.map.x, editor.mouse.map.y
 					editor.sys:add_object({id=editor.selected.object,
+--										type=editor.selected.object,
 										x=mapx*editor.sys.map.tileset.tile_width,
 										y=mapy*editor.sys.map.tileset.tile_width,
 										opacity=255,
@@ -76,8 +78,12 @@ function object_tool:update(dt, editor)
 			local ty=editor.sys.map.objects[editor.selected.edit_object].y-editor.sys.map.camera.y
 			editor=editor.toolset[6]:update_widgets(editor, {x=tx, y=ty})
 			editor=editor.toolset[6]:open(editor) 
+			editor.selected.editing=true
 		end
-	end		
+	end
+	if(editor.toolset[6].closed) and editor.mouse.holding==0 then
+		editor.selected.editing=nil
+	end
 	return editor
 end
 
@@ -94,6 +100,7 @@ function object_tool:map_hover(editor)
 		editor.sys.map.objects[editor.selected.move_object].x=mapx
 		editor.sys.map.objects[editor.selected.move_object].y=mapy
 	end
+	
 	
 	return editor
 end

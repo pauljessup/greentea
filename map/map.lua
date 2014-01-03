@@ -140,8 +140,9 @@ function gt_map:add_object(object)
 			if(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. object.type .. ".lua")) then
 				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. object.type .. ".lua")()
 				table.insert(self.objects, object_class(object))
-			elseif(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. "/" .. self.name ..  "/" .. object.type .. ".lua")) then
-			
+			elseif(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. self.name ..  "/" .. object.type .. ".lua")) then
+				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. self.name ..  "/" .. object.type .. ".lua")()
+				table.insert(self.objects, object_class(object))			
 			else
 				table.insert(self.objects, gt_object(object))			
 			end	
