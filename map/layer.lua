@@ -40,7 +40,6 @@ function gt_layer:save_table()
 	l.width=self.width
 	l.opacity=self.opacity
 	l.tileset=self.tileset:save_table()
-	l.camera=self.camera:save_table()
 	l.map=self.map
 	return l
 end
@@ -51,6 +50,31 @@ end
 
 function gt_layer:get_value(value)
 	return self.values[value]
+end
+
+function gt_layer:do_flood_fill(value, x, y, tochange, ox, oy)
+			if(ox==nil) then ox=x end if(oy==nil) then oy=y end
+			if(x<1) then return end if(y<1) then return end
+			--if(x>=self.width-2) then return end
+			--if(y>=self.height-2) then return end
+			if(x>ox+50) then return end
+			if(y>ox+50) then return end
+			if(x>=self.width) then return end
+			if(y>=self.height) then return end			
+			
+			if self:get_tile(x,y) == value then return  end
+			if self:get_tile(x,y) ~= tochange then return end
+			
+			self:set_tile(value, x, y)
+			self:do_flood_fill(value, x-1,y,tochange, ox, oy)
+			self:do_flood_fill(value, x+1,y,tochange, ox, oy)
+			self:do_flood_fill(value, x,y+1,tochange, ox, oy)			
+			self:do_flood_fill(value, x,y-1,tochange, ox, oy)
+end
+
+function gt_layer:flood_fill(value, x, y)
+	tochange = self:get_tile(x,y) 
+	self:do_flood_fill(value, x, y, tochange)
 end
 
 function gt_layer:set_all(original_tile, new_tile)
@@ -71,7 +95,8 @@ end
 
 
 function gt_layer:get_tile(x, y)
-	return self.tileset:get(self.map[y][x])
+	if(self.map[y]~=nil) then  return self.tileset:get(self.map[y][x]) else return 0 end
+	if(self.map[y][x]~=nil) then  return self.tileset:get(self.map[y][x]) else return 0 end
 end
 
 function gt_layer:change_tile_values(id, opacity, values)
@@ -98,7 +123,8 @@ end
 
 
 function gt_layer:update(dt)
-	self.tileset:update()
+	self.tileset:update(dt)
+	self.camera:update(dt)
 end
 
 function gt_layer:hide()
@@ -114,9 +140,9 @@ function gt_layer:is_hidden()
 end
 
 function gt_layer:check_edges()
-	local edge_bot=0
+	local edge_bot=self.tileset.tile_height
 	local edge_top=(self.height*self.tileset.tile_height)-self.camera.height
-	local edge_left=0
+	local edge_left=self.tileset.tile_width
 	local edge_right=(self.width*self.tileset.tile_width)-self.camera.width
 	if(self.camera.x<=edge_left) then self.camera.x=edge_left 
 	elseif(self.camera.x>=edge_right) then self.camera.x=edge_right

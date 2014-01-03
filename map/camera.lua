@@ -18,6 +18,10 @@ function gt_camera:save_table()
 	return l
 end
 
+function gt_camera:update(dt)
+
+end
+
 function gt_camera:expand(height, width)
 	self.height=self.height+height
 	self.width=self.width+width

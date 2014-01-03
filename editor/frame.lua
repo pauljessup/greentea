@@ -6,10 +6,12 @@ function gt_frame:init(x, y, w, h, col, outline)
 	self.width=w
 	self.height=h
 	self.col=col
+	self.hidden=false
 	self.outline=outline
 end
 
 function gt_frame:draw()
+			if(self.hidden) then return end
 		   love.graphics.setLineStyle("rough")
 
 		   love.graphics.setColor(self.col.r, self.col.g, self.col.b, self.col.alpha)		   

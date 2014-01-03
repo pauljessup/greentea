@@ -7,7 +7,8 @@ function gt_toolbar:init(name, transition, x, y, orientation, padding, editor, c
 	self.name=name
 	--load all the tool plugins based on name.
 	self.tools={}
-	
+	self.padding=padding
+	self.orientation=orientation
 	self.folder=editor.plugin_directory .. "/" .. name .. "/"
 	local files = love.filesystem.getDirectoryItems(self.folder)
 	local id=#editor.tools
@@ -46,9 +47,46 @@ function gt_toolbar:init(name, transition, x, y, orientation, padding, editor, c
 	gt_transition.init(self, transition, x, y, tw, th, col, outline, editor)
 end
 
+function gt_toolbar:update_widgets(editor, update)
+	self.x=update.x
+	self.y=update.y
+	local tx, ty, tw, th=update.x+self.padding, update.y+self.padding, self.padding*2, self.padding*2
+	for i,v in ipairs(self.tools) do
+		local widget=editor.tools[v.id]
+				editor.tools[v.id].x, editor.tools[v.id].y=tx, ty
+				editor.tools[v.id]:set_tooltip(editor, editor.tools[v.id].tooltip)
+				if(self.orientation=="vertical") then
+					ty=ty+widget.height+self.padding+(self.padding/2)
+					th=th+widget.height+self.padding+(self.padding/2)
+					if(tw<widget.width+self.padding) then tw=widget.width+(self.padding*2) end
+				else
+					tx=tx+widget.width+self.padding+(self.padding/2)
+					tw=tw+widget.height+self.padding+(self.padding/2)	
+					if(th<widget.height+self.padding) then th=widget.height+(self.padding*2) end					
+				end
+	end
+	return editor
+end
+
+function gt_toolbar:open(editor)
+	gt_transition.open(self, editor)
+	for i,v in ipairs(self.tools) do
+		editor.tools[v.id].hidden=false
+	end
+	return editor
+end
+
+function gt_toolbar:close(editor)
+	for i,v in ipairs(self.tools) do
+		editor.tools[v.id].hidden=true
+	end
+	gt_transition.close(self, editor)	
+	return editor
+end
+
 function gt_toolbar:update(dt, editor)
 	for i,v in ipairs(self.tools) do
-		editor=editor.tools[v.id]:update(dt, editor)
+		if(self.opened) then  editor=editor.tools[v.id]:update(dt, editor) end
 	end
 	gt_transition.update(self, dt)
 	return editor

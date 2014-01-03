@@ -1,5 +1,12 @@
 gt_map=Class{}
 
+function gt_map:using_editor(use, editor)
+	self.editor=use
+	for i,v in ipairs(self.objects) do
+		v:editor_init(editor)
+	end
+end
+
 function gt_map:get_layer_cameras()
 	local layers={}
 	for i,v in self:get_layers() do
@@ -17,6 +24,11 @@ end
 function gt_map:set_tile(tilenumber, layer, x, y) -- map positions.
 	self.layers[layer]:set_tile(tilenumber, x, y)
 end
+
+function gt_map:flood_fill(tilenumber, layer, x, y) -- map positions.
+	self.layers[layer]:flood_fill(tilenumber, x, y)
+end
+
 
 function gt_map:get_tile(layer, x, y) -- map positions.
 	return self.layers[layer]:get_tile(x, y)
@@ -125,9 +137,12 @@ function gt_map:add_layer(v)
 end
 
 function gt_map:add_object(object)
-			if(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. object.type .. ".lua")) then
-				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. object.type .. ".lua")()
+			if(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. object.type)) then
+				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. object.type)()
 				table.insert(self.objects, object_class(object))
+			elseif(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. self.name ..  "/" .. object.type)) then
+				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. self.name ..  "/" .. object.type)()
+				table.insert(self.objects, object_class(object))			
 			else
 				table.insert(self.objects, gt_object(object))			
 			end	
@@ -165,9 +180,43 @@ function gt_map:get_layers()
 	return ipairs(self.layers)
 end
 
+function gt_map:get_object(id)
+	return self.objects[id]
+end
+
+function gt_map:set_object(id, object)
+	self.objects[id]=object
+end
+
+--checks to see if any objects collide with 
+--supplied object. Object can be any table at all
+--it just needs to have a height, width, x, y layer.
+--if nothing hits, returns false.
+--if something hits, returns true
+--and then it returns the id of the collision hit
+--so you can access it directly with map:get_object(i)
+function gt_map:object_collide(object)
+	for i, o in ipairs(self.objects) do
+			if(o:check_collision(object)) then return true, i end
+	end
+	return false
+end
+	
+
+function gt_map:collide(object)
+
+return object
+end
+	
 function gt_map:object_draw(layer)
 	for i, o in ipairs(self.objects) do
-		if(o.layer==layer) and (not o.hidden) then o:draw(self:get_layer(layer)) end 
+		if(o.layer==layer) and (not o.hidden) then 
+			if(self.editor) then
+				o:editor_draw(self:get_layer(layer))
+			else
+				o:draw(self:get_layer(layer))
+			end
+		end 
 	end
 end
 
@@ -176,7 +225,7 @@ function gt_map:update(dt)
 		i:update(dt)
 	end
 	for l, i in self:get_objects() do
-		i:update(self:get_layer(i.layer), dt)
+		self=i:update(self, dt)
 	end
 end
 
