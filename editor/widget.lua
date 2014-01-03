@@ -10,7 +10,8 @@ function gt_widget:init(editor, x, y, id, tooltip)
 	self.is_hover=false
 	self.hover_tip=gt_frame(x+3, y-7, editor.font.font:getWidth(tooltip)+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=100}, {r=0, g=0, b=0, alpha=255}) 
 	self.focus=false
-	self.hidden=false
+--	self.hidden=false
+	self.hidden=true
 end
 
 function gt_widget:set_tooltip(editor,tooltip)

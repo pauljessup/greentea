@@ -77,10 +77,10 @@ function gt_toolbar:open(editor)
 end
 
 function gt_toolbar:close(editor)
-	gt_transition.close(self, editor)
 	for i,v in ipairs(self.tools) do
 		editor.tools[v.id].hidden=true
 	end
+	gt_transition.close(self, editor)	
 	return editor
 end
 

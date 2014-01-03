@@ -77,11 +77,48 @@ end
 function gt_editor:get_objects(sys, folder)
 	local files = love.filesystem.getDirectoryItems(folder)	
 	for num, name in pairs(files) do
-		if(love.filesystem.isFile(folder .. name)) then
-			table.insert(self.objects, name);
+		if(love.filesystem.isFile(folder .. name)) then	
+			local object={id=name, type=name, x=0, y=0, opacity=255, speed=1, 0 }
+			local object_class=love.filesystem.load(folder .. name)()
+			table.insert(self.objects, object_class(object))		
 		end
-	end	
+	end
+	self:set_object_grid()
+end
 
+function gt_editor:set_object_grid()
+	self.object_grid.width=(love.window.getWidth()/self.sys.scale.x)-100
+	if(self.object_grid.tallest==nil) then self.object_grid.tallest=0 end
+	local tallest, height, ox, oy=self.object_grid.tallest, 0, self.object_grid.x, self.object_grid.y
+	local x, y=ox, oy
+	for i,v in ipairs(self.objects) do
+		v:editor_init(self)
+		if(v.height>tallest) then tallest=v.height end
+		v.x=x
+		v.y=y+5
+		x=x+v.width+5
+		if(x>self.object_grid.width) then
+			y=y+tallest
+			x=ox
+			tallest=0
+		end
+	end
+	if(y==nil) then y=tallest end
+	self.object_grid.height=y+10
+	self.object_grid.y=y
+end
+
+function gt_editor:draw_object_grid()
+	for i,v in ipairs(self.objects) do
+		v:editor_select_draw()
+	end
+end
+
+function gt_editor:hover_object_grid()
+	for i,v in ipairs(self.objects) do
+		if(self:check_hover(self.mouse, v)) then return true, v end
+	end	
+	return false
 end
 
 function gt_editor:run(sys)
@@ -97,10 +134,23 @@ function gt_editor:run(sys)
 		end
 		if(self.font~=nil) then love.graphics.setFont(self.font.font) end
 		self.sys.map:using_editor(true, self)
-		local obj_folder=self.plugin_directory .. "/objects/"
-		local map_folder=obj_folder .. "/" .. sys.map.name .. "/"
+		local obj_folder=self.sys.plugin_directory .. "/objects/"
+		local map_folder=obj_folder .. "/" .. self.sys.map.name .. "/"
+		
+		self.objects={}
+		self.object_grid={}
+		self.object_grid.x, self.object_grid.y=0, 0
+		 
 		self:get_objects(sys, obj_folder)
-		self:get_objects(sys, map_folder)		
+		self:get_objects(sys, map_folder)
+
+		local center=self:get_center_screen()
+		local w, h=self.object_grid.width, self.object_grid.height
+		self.object_grid.x, self.object_grid.y=center.x-(w/2), center.y-(h/2)				
+		self:set_object_grid()
+		w, h=self.object_grid.width, self.object_grid.height
+		self.object_grid.x, self.object_grid.y=center.x-(w/2), center.y-(h/2)
+		self:set_object_grid()
 end
 
 function gt_editor:close(sys)
@@ -179,7 +229,9 @@ function gt_editor:check_mouse()
 		
 		if(self.mouse.x<1) then 
 			self.mouse.x=1 
-			self.sys.map:scroll(-.2, 0)
+			if(math.floor(self.sys.map.camera.x)>self.sys.map.tileset.tile_width) then			
+				self.sys.map:scroll(-.2, 0)
+			end			
 		end
 		if(self.mouse.y<=1) then
 			self.mouse.y=1

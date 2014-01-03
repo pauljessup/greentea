@@ -7,13 +7,16 @@ function gt_object:init(object_table)
 	self.hidden=object_table.hidden
 	self.x=object_table.x
 	self.y=object_table.y
-	self.filename=object_table.image
-	if(self.filename~=nil) then 
-		self.image=love.graphics.newImage(self.filename) 
+	self.init=false
+	if(object_table.image~=nil) then 
+		self.image=love.graphics.newImage(object_table.image) 
 		self.width=self.image:getWidth()
 		self.height=self.image:getHeight()
+		self.filename=object_table.image
 	end
-	self.editor_image="placeholder.png"
+	if(object_table.editor_image==nil) then
+		self.editor_image="placeholder.png"
+	end
 	self.speed=object_table.speed
 	self.opacity=object_table.opacity
 	self.layer=object_table.layer
@@ -81,17 +84,19 @@ function gt_object:draw(layer)
 end
 
 function gt_object:editor_init(editor)
-	if(self.editor_image==nil) and(self.filename~=nil) then
-		self.editor_image=self.filename
+	if(not self.init) then
+			if(self.editor_image~=nil) then
+				self.editor_image=editor.asset_directory .. "/" .. self.editor_image 
+			end
+			self.init=true
 	end
-	
-	if(self.filename==nil) then
-		self.filename=editor.asset_directory .. "/" .. self.editor_image
-		self.image=love.graphics.newImage(self.filename) 
-		self.w=self.image:getWidth()
-		self.h=self.image:getHeight()		
-	end
-	self.edit_image=love.graphics.newImage(editor.asset_directory .. "/" .. self.editor_image)	
+		if(self.image==nil) and self.id~="unique" then
+			self.filename=self.editor_image
+			self.image=love.graphics.newImage(self.filename) 
+			self.width=self.image:getWidth()
+			self.height=self.image:getHeight()	
+		end
+		self.edit_image=love.graphics.newImage(self.editor_image)	
 end
 
 function gt_object:editor_draw(layer)
@@ -101,4 +106,8 @@ function gt_object:editor_draw(layer)
 		love.graphics.draw(self.edit_image, x, y)
 		love.graphics.setColor(255, 255, 255, 255)	
 	end
+end
+
+function gt_object:editor_select_draw()
+		love.graphics.draw(self.edit_image, self.x, self.y)
 end

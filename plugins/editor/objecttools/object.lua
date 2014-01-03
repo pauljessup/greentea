@@ -23,11 +23,12 @@ function object_tool:map_pressed(editor)
 
 	local mapx,mapy=editor.mouse.map.x*editor.sys.map.tileset.tile_width, editor.mouse.map.y*editor.sys.map.tileset.tile_height		
 	local tocheck={layer=editor.selected.layer, x=mapx, y=mapy, width=editor.sys.map.tileset.tile_width, height=editor.sys.map.tileset.tile_height}
-	local check_hover={x=editor.mouse.x, y=editor.mouse.y, height=editor.mouse.height, width=editor.mouse.width}
-
+	local check_hover={x=editor.mouse.x, y=editor.mouse.y, height=editor.mouse.height+5, width=editor.mouse.width}
+	
+	
 	hit, target=editor.sys.map:object_collide(tocheck)	
 
-	if(editor.selected.edit_object~=nil) and not editor:check_hover(check_hover, editor.toolset[6]) then
+	if(editor.selected.edit_object~=nil) and not hit and not editor:check_hover(check_hover, editor.toolset[6]) then
 			editor=editor.toolset[6]:close(editor)
 			editor.selected.edit_object=nil
 			self.placing=true
@@ -38,7 +39,7 @@ function object_tool:map_pressed(editor)
 					self.placing=true
 					local mapx,mapy=editor.mouse.map.x, editor.mouse.map.y
 					editor.sys:add_object({id=editor.selected.object,
---										type=editor.selected.object,
+										type=editor.selected.object,
 										x=mapx*editor.sys.map.tileset.tile_width,
 										y=mapy*editor.sys.map.tileset.tile_width,
 										opacity=255,
@@ -74,7 +75,7 @@ function object_tool:update(dt, editor)
 
 	if(editor.selected.edit_object~=nil) then
 		if(editor.toolset[6].hidden) and (not editor.toolset[6].opening) then 
-			local tx=editor.sys.map.objects[editor.selected.edit_object].x-editor.sys.map.camera.x+10
+			local tx=editor.sys.map.objects[editor.selected.edit_object].x-editor.sys.map.camera.x+20
 			local ty=editor.sys.map.objects[editor.selected.edit_object].y-editor.sys.map.camera.y
 			editor=editor.toolset[6]:update_widgets(editor, {x=tx, y=ty})
 			editor=editor.toolset[6]:open(editor) 
@@ -121,8 +122,6 @@ function object_tool:draw(editor)
 		love.graphics.print("right click to move, click to edit", self.hover_tip2.x+5, self.hover_tip2.y+5) 
 		self.showtip=false 
 	end
-	--if(editor.selected.edit_object~=nil) then love.graphics.print("YAY I'm selected", 100, 100) end
-
 end
 
 return object_tool
