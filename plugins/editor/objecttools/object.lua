@@ -8,7 +8,6 @@ function object_tool:init(editor, x, y, id)
 	self.tile={width=editor.sys.map.tileset.tile_width, height=editor.sys.map.tileset.tile_height, draw=false, scale=editor.sys.scale}
 	self.hover_tip2=gt_frame(x+3, y-7, editor.font.font:getWidth("right click to move, click to edit")+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=100}, {r=0, g=0, b=0, alpha=255}) 
 	self.showtip=false
-	
 	self:add_button(editor, "objectdrop.png")
 	self.placing=false
 end
@@ -24,36 +23,43 @@ function object_tool:map_pressed(editor)
 
 	local mapx,mapy=editor.mouse.map.x*editor.sys.map.tileset.tile_width, editor.mouse.map.y*editor.sys.map.tileset.tile_height		
 	local tocheck={layer=editor.selected.layer, x=mapx, y=mapy, width=editor.sys.map.tileset.tile_width, height=editor.sys.map.tileset.tile_height}
+	local check_hover={x=editor.mouse.x+10, y=editor.mouse.y, height=editor.mouse.height, width=editor.mouse.width}
+
 	hit, target=editor.sys.map:object_collide(tocheck)	
-	
-	if editor.mouse.pressed=="l" and not self.placing then
-		if(editor.selected.move_object==nil) and editor.selected.edit_object==nil and not hit then
+
+	if(editor.selected.edit_object~=nil) and not editor:check_hover(check_hover, editor.toolset[6]) then
+			editor=editor.toolset[6]:close(editor)
+			editor.selected.edit_object=nil
 			self.placing=true
-			local mapx,mapy=editor.mouse.map.x, editor.mouse.map.y
-			editor.sys:add_object({id=editor.selected.object,
-								x=mapx*editor.sys.map.tileset.tile_width,
-								y=mapy*editor.sys.map.tileset.tile_width,
-								opacity=255,
-								speed=1,
-								layer=editor.selected.layer
-								})
-			
-			for i,v in ipairs(editor.sys.map.objects) do
-				v:editor_init(editor)
+	else
+			if editor.mouse.pressed=="l" and not self.placing then
+				if(editor.selected.move_object==nil) and editor.selected.edit_object==nil and not hit then
+					self.placing=true
+					local mapx,mapy=editor.mouse.map.x, editor.mouse.map.y
+					editor.sys:add_object({id=editor.selected.object,
+										x=mapx*editor.sys.map.tileset.tile_width,
+										y=mapy*editor.sys.map.tileset.tile_width,
+										opacity=255,
+										speed=1,
+										layer=editor.selected.layer
+										})
+					
+					for i,v in ipairs(editor.sys.map.objects) do
+						v:editor_init(editor)
+					end
+					editor.selected.move_object=nil
+				elseif editor.selected.move_object==nil and editor.selected.edit_object==nil and hit then
+					editor.selected.edit_object=target	
+				elseif editor.selected.move_object~=nil then
+					self.placing=true
+					editor.sys.map.objects[editor.selected.move_object].x=editor.mouse.map.x*editor.sys.map.tileset.tile_width
+					editor.sys.map.objects[editor.selected.move_object].y=editor.mouse.map.y*editor.sys.map.tileset.tile_height
+					editor.selected.move_object=nil
+				end
+			elseif(editor.mouse.pressed=="r") then
+					if(hit) then editor.selected.move_object=target end
 			end
-			editor.selected.move_object=nil
-		elseif editor.selected.move_object==nil and editor.selected.edit_object==nil and hit then
-			editor.selected.edit_object=target	
-		elseif editor.selected.move_object~=nil then
-			self.placing=true
-			editor.sys.map.objects[editor.selected.move_object].x=editor.mouse.map.x*editor.sys.map.tileset.tile_width
-			editor.sys.map.objects[editor.selected.move_object].y=editor.mouse.map.y*editor.sys.map.tileset.tile_height
-			editor.selected.move_object=nil
-		end
-	elseif(editor.mouse.pressed=="r") then
-			if(hit) then editor.selected.move_object=target end
 	end
-	
 	return editor
 end
 
@@ -61,15 +67,17 @@ function object_tool:update(dt, editor)
 	if(editor.mouse.holding==0) then
 		self.placing=false
 	end
-	
-	if(editor.selected.move_object~=nil) then
-		--open object editor
-	else
-		--clos object editor
-	end
-	
+		
 	if(self.button.active) then self.hidden=false end
-	
+
+	if(editor.selected.edit_object~=nil) then
+		if(editor.toolset[6].hidden) and (not editor.toolset[6].opening) then 
+			local tx=editor.sys.map.objects[editor.selected.edit_object].x-editor.sys.map.camera.x+10
+			local ty=editor.sys.map.objects[editor.selected.edit_object].y-editor.sys.map.camera.y
+			editor=editor.toolset[6]:update_widgets(editor, {x=tx, y=ty})
+			editor=editor.toolset[6]:open(editor) 
+		end
+	end		
 	return editor
 end
 
@@ -106,8 +114,8 @@ function object_tool:draw(editor)
 		love.graphics.print("right click to move, click to edit", self.hover_tip2.x+5, self.hover_tip2.y+5) 
 		self.showtip=false 
 	end
-	if(editor.selected.edit_object~=nil) then love.graphics.print("YAY I'm selected", 100, 100) end
-	
+	--if(editor.selected.edit_object~=nil) then love.graphics.print("YAY I'm selected", 100, 100) end
+
 end
 
 return object_tool
