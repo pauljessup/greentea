@@ -7,4 +7,9 @@ function test:init(object_table)
 	gt_object.init(self, object_table)
 end
 
+function test:update(map, dt)
+	self.x=self.x+.2
+return map
+end
+
 return test
