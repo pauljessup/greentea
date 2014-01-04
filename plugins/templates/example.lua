@@ -21,7 +21,10 @@ function example_template:create(greentea)
 						speed=1,
 						default_tile=80,
 						})	
-
+--[[ here's an example
+	if you want to use a parallax scrolling fog layer.
+	just uncomment out below.
+	
 	greentea:add_layer({
 					id=#greentea.map.layers,
 					type="parallax",
@@ -36,7 +39,7 @@ function example_template:create(greentea)
 							},
 					values={scroll_x=0, scroll_y=.2}
 				})
-				
+--]]				
 	return greentea
 end
 
