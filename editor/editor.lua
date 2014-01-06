@@ -240,10 +240,14 @@ function gt_editor:check_mouse()
 			end
 		end
 		if(self.mouse.x>((love.window.getWidth()/self.sys.scale.x)-8)) then
-			self.sys.map:scroll(.2, 0)
+			if(self.sys.map.camera.x<=((self.sys.map.width)*(self.sys.map.tileset.tile_width)-(love.window.getWidth()/self.sys.scale.x))) then		
+				self.sys.map:scroll(.2, 0)
+			end
 		end
 		if(self.mouse.y>((love.window.getHeight()/self.sys.scale.y)-8)) then
-			self.sys.map:scroll(0, .2)
+			if(self.sys.map.camera.y<=((self.sys.map.height)*(self.sys.map.tileset.tile_height)-(love.window.getHeight()/self.sys.scale.y))) then
+				self.sys.map:scroll(0, .2)
+			end
 		end		
 		self.mouse.width, self.mouse.height=self.sys.map.tileset.tile_width*self.sys.scale.x, self.sys.map.tileset.tile_height*self.sys.scale.y
 		self.mouse.widget={}

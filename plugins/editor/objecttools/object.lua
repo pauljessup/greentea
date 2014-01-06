@@ -76,7 +76,7 @@ function object_tool:update(dt, editor)
 	if(editor.selected.edit_object~=nil) then
 		if(editor.toolset[6].hidden) and (not editor.toolset[6].opening) then 
 			local tx=editor.sys.map.objects[editor.selected.edit_object].x-editor.sys.map.camera.x+20
-			local ty=editor.sys.map.objects[editor.selected.edit_object].y-editor.sys.map.camera.y
+			local ty=(editor.sys.map.objects[editor.selected.edit_object].y-editor.sys.map.camera.y)-((editor.toolset[6].original.h/2)-10)
 			editor=editor.toolset[6]:update_widgets(editor, {x=tx, y=ty})
 			editor=editor.toolset[6]:open(editor) 
 			editor.selected.editing=true

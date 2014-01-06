@@ -3,6 +3,7 @@ gt_camera=Class{}
 function gt_camera:init(camera_table)
 	self.x=camera_table.x
 	self.y=camera_table.y
+	self.padding=camera_table.padding
 	self.speed=camera_table.speed
 	self.height=camera_table.height
 	self.width=camera_table.width
@@ -13,6 +14,7 @@ function gt_camera:save_table()
 	l.speed=self.speed
 	l.x=self.x
 	l.y=self.y
+	l.padding=self.padding
 	l.height=self.height
 	l.width=self.width
 	return l

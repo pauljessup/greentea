@@ -165,7 +165,7 @@ end
 
 function green_tea:load_map(map)
 			map.plugin_directory=self.plugin_directory
-			map.camera={x=0, y=-0, height=(love.window.getHeight()/self.scale.y), width=(love.window.getWidth()/self.scale.x), speed=1}
+			map.camera={x=0, y=-0, height=(love.window.getHeight()/self.scale.y), width=(love.window.getWidth()/self.scale.x), speed=1, padding=4}
 			map.camera=self:load_camera(map.camera)
 			map.tileset=self:load_tileset(map.tileset)
 			

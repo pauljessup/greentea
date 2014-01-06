@@ -17,9 +17,9 @@ function gt_layer:init(layer_table)
 	if(layer_table.map==nil) then
 			--starter map. all 0's
 			local mx, my=0,0
-			while my<self.height do
+			while my<self.height+self.camera.padding do
 					self.map[my]={}
-					while mx<self.width do
+					while mx<self.width+self.camera.padding do
 						self.map[my][mx]=layer_table.default_tile
 						mx=mx+1
 					end
