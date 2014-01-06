@@ -46,7 +46,7 @@ function object_tool:map_pressed(editor)
 										speed=1,
 										layer=editor.selected.layer
 										})
-					
+					table.insert(editor.undo, {object=true}) 
 					for i,v in ipairs(editor.sys.map.objects) do
 						v:editor_init(editor)
 					end

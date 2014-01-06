@@ -7,6 +7,16 @@ function gt_map:using_editor(use, editor)
 	end
 end
 
+function gt_map:undo(touse)
+	if(touse~=nil) then
+		if(touse.tile~=nil) then
+			self.layers[touse.layer].map[touse.y][touse.x]=touse.tile
+		elseif(touse.object~=nil) then
+			table.remove(self.objects)
+		end
+	end
+end
+
 function gt_map:get_layer_cameras()
 	local layers={}
 	for i,v in self:get_layers() do

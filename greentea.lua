@@ -163,12 +163,12 @@ function green_tea:load_layers(layers)
 		end
 end
 
+
 function green_tea:load_map(map)
 			map.plugin_directory=self.plugin_directory
-			map.camera={x=0, y=-0, height=(love.window.getHeight()/self.scale.y), width=(love.window.getWidth()/self.scale.x), speed=1, padding=4}
+			map.camera={x=0, y=0, height=(love.window.getHeight()/self.scale.y), width=(love.window.getWidth()/self.scale.x), speed=1, padding=4}
 			map.camera=self:load_camera(map.camera)
 			map.tileset=self:load_tileset(map.tileset)
-			
 			local layers, objects=map.layers, map.objects
 			if(map.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/maps/" .. map.type .. ".lua")) then
 				local map_class=love.filesystem.load(self.plugin_directory .. "/maps/" .. map.type .. ".lua")()
@@ -179,7 +179,12 @@ function green_tea:load_map(map)
 				self.map=gt_map(map)
 				self:load_layers(layers)
 				self:load_objects(objects)				
-			end	
+			end
+			if(map.starting_x~=nil) and (map.starting_y~=nil) then
+				self:move(map.starting_x*map.tileset.tile_width, map.starting_y*map.tileset.tile_height)
+			else
+				self:move((map.width*map.tileset.tile_width)/2, (map.height*map.tileset.tile_height)/2)
+			end		
 end
 
 function green_tea:move(x, y)

@@ -22,6 +22,7 @@ function gt_editor:init(sys)
 	self.selected.tiles.use=false
 	self.selected.layer=1
 	self.focus_tool=1
+	self.undo={}
 	
 	self.mouse={x=0, y=0, held=false, holding=0}
 	
@@ -56,7 +57,7 @@ function gt_editor:init(sys)
 	self.frame_color={r=200, g=200, b=200}
 
 	self.toolset={}
-	local x, y=self:calculate_location("right", 100, 0)
+	local x, y=self:calculate_location("right", 128, 0)
 	table.insert(self.toolset, gt_transition("slidedown", -5, -5, (love.window.getWidth()/self.sys.scale.x)+50, 35,  self.window_color, self.frame_color, self))	
 	table.insert(self.toolset, gt_toolbar("maptools", "slidedown", x, y, "horizontal", 6, self, {r=0, g=0, b=0, alpha=0}, {r=0, g=0, b=0, alpha=0}))	
 	table.insert(self.toolset, gt_toolbar("tiletools", "slideleft", 5, 50, "vertical", 6, self))	
@@ -229,13 +230,13 @@ function gt_editor:check_mouse()
 		
 		if(self.mouse.x<1) then 
 			self.mouse.x=1 
-			if(math.floor(self.sys.map.camera.x)>self.sys.map.tileset.tile_width) then			
+			if(math.floor(self.sys.map.camera.x)>=self.sys.map.tileset.tile_width) then			
 				self.sys.map:scroll(-.2, 0)
 			end			
 		end
 		if(self.mouse.y<=1) then
 			self.mouse.y=1
-			if(math.floor(self.sys.map.camera.y)>self.sys.map.tileset.tile_height) then			
+			if(math.floor(self.sys.map.camera.y)>=self.sys.map.tileset.tile_height) then			
 				self.sys.map:scroll(0, -.2)
 			end
 		end
@@ -256,6 +257,11 @@ function gt_editor:check_mouse()
 		self:check_button()
 end
 
+function gt_editor:do_undo()
+	local l=table.remove(self.undo)
+	--error(#self.undo)
+	self.sys.map:undo(l)
+end
 
 function gt_editor:check_button()
 		local down, p=false, ""
