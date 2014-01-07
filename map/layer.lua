@@ -122,9 +122,11 @@ function gt_layer:set_camera(camera)
 end
 
 
-function gt_layer:update(dt)
+function gt_layer:update(dt, editor)
 	self.tileset:update(dt)
-	self.camera:update(dt)
+	if(not editor) then
+			self.camera:update(dt)
+	end
 end
 
 function gt_layer:hide()

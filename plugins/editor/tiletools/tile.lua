@@ -20,10 +20,12 @@ function tile_tool:map_pressed(editor)
 	local tileset=editor.sys.map.layers[editor.selected.layer].tileset
 	if(editor.mouse.pressed=="l") then
 			if(not editor.selected.tiles.use) then
-				table.insert(editor.undo, {layer=editor.selected.layer, x=mapx, y=mapy, tile=editor.sys.map:get_tile(editor.selected.layer, mapx, mapy)}) 
-				editor.sys.map:set_tile(editor.selected.tile, editor.selected.layer, mapx, mapy)
+				local oldtile=editor.sys.map:get_tile(editor.selected.layer, mapx, mapy)
+				if(oldtile~=editor.selected.tile) then
+					table.insert(editor.undo, {layer=editor.selected.layer, x=mapx, y=mapy, tile=oldtile}) 
+					editor.sys.map:set_tile(editor.selected.tile, editor.selected.layer, mapx, mapy)
+				end
 			else
-				table.insert(editor.undo, editor.sys.map:undo()) 
 				local ox,oy=editor.selected.tiles.x, editor.selected.tiles.y
 				local x, y=1,1
 				local center=editor:get_center_screen()

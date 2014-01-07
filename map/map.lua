@@ -207,15 +207,27 @@ end
 --so you can access it directly with map:get_object(i)
 function gt_map:object_collide(object)
 	for i, o in ipairs(self.objects) do
-			if(o:check_collision(object)) then return true, i end
+			if(o:check_collision(object)) then return i end
 	end
 	return false
 end
 	
 
-function gt_map:collide(object)
+function gt_map:tile_collide(object)
+	for i,o in self:get_layers() do
+		if(o.type=="collision") then
+			if(o:get_tile(object.x, object.y)~=0) then
+				return o:get_tile(object.x, object.y)
+			end
+		end
+	end
+	return false
+end
 
-return object
+function gt_map:collide(object)
+		if(self:tile_collide(object)) then return self:tile_collide(object) end
+		if(self:object_collide(object)) then return self:object_collide(object) end
+		return false
 end
 	
 function gt_map:object_draw(layer)

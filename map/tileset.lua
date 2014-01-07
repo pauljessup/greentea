@@ -139,12 +139,22 @@ function gt_tileset:get_image(image)
 	return self.image
 end
 
+function gt_tileset:get_anims(tilenumber)
+	for i,v in pairs(self.anims) do
+		if(v.frames[1]==tilenumber) then return v end
+	end
+	return nil
+end
+
 function gt_tileset:get_anim_frame(tilenumber)
-	if(self.anims~=nil) then
-			if(self.anims[tilenumber]~=nil) then
-				local anims=self.anims[tilenumber]
-				return anims.frames[anims.current]
-			end
+	if(self.anims~=nil) and (self:get_anims(tilenumber)~=nil) then
+--			if(self.anims[tilenumber]~=nil) then
+--				local anims=self.anims[tilenumber]
+				local anims=self:get_anims(tilenumber)
+				if(anims.current==nil) then anims.current=1 end
+				if(anims.frames[math.floor(anims.current)]==nil) then error(math.floor(anims.current)) end
+				return anims.frames[math.floor(anims.current)]
+--			end
 	end
 	return tilenumber
 end
@@ -152,14 +162,16 @@ end
 function gt_tileset:update(dt)
 	if(self.anims~=nil) then
 			for i, v in pairs(self.anims) do
+					if(v.current==nil) then v.current=1 end
 					if(v.speed~=nil) then
-						if(v.counter>v.speed) then
+						if(v.counter==nil) then v.counter=0 end
+						if(v.counter>30) then
 							local last_tile=v.current
 							v.counter=0
-							v.current=v.current+(1*dt)
-							if(v.current==#v.frames) then v.current=i end
+							v.current=v.current+1
+							if(v.current>#v.frames) then v.current=1 v.counter=0 end
 						else
-							v.counter=v.counter+1
+							v.counter=v.counter+v.speed
 						end
 					end
 			end

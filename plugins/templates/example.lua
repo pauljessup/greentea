@@ -16,11 +16,32 @@ function example_template:create(greentea)
 						default_tile=13
 						})
 						
-		greentea:add_layer({id="ground2", 
+		greentea:add_layer({id="details", 
 						opacity=255, 
 						speed=1,
-						default_tile=80,
-						})	
+						default_tile=0,
+						})
+						
+		greentea:add_layer({id="shadows", 
+						opacity=150, 
+						speed=1,
+						default_tile=0,
+						type='collision'
+						})						
+						
+		greentea:add_layer({id="walls", 
+						opacity=255, 
+						speed=1,
+						default_tile=0,
+						type='collision'
+						})		
+
+		greentea:add_layer({id="wall details", 
+						opacity=255, 
+						speed=1,
+						default_tile=0,
+						})
+						
 --[[ here's an example
 	if you want to use a parallax scrolling fog layer.
 	just uncomment out below.

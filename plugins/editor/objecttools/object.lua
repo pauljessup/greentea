@@ -24,9 +24,7 @@ function object_tool:map_pressed(editor)
 	local mapx,mapy=editor.mouse.map.x*editor.sys.map.tileset.tile_width, editor.mouse.map.y*editor.sys.map.tileset.tile_height		
 	local tocheck={layer=editor.selected.layer, x=mapx, y=mapy, width=editor.sys.map.tileset.tile_width, height=editor.sys.map.tileset.tile_height}
 	local check_hover={x=editor.mouse.x, y=editor.mouse.y, height=editor.mouse.height+5, width=editor.mouse.width}
-	
-	
-	hit, target=editor.sys.map:object_collide(tocheck)	
+	hit=editor.sys.map:object_collide(tocheck)	
 
 	if(editor.selected.edit_object~=nil) and not hit and not editor:check_hover(check_hover, editor.toolset[6]) then
 			editor=editor.toolset[6]:close(editor)
@@ -52,7 +50,7 @@ function object_tool:map_pressed(editor)
 					end
 					editor.selected.move_object=nil
 				elseif editor.selected.move_object==nil and editor.selected.edit_object==nil and hit then
-					editor.selected.edit_object=target	
+					editor.selected.edit_object=hit
 				elseif editor.selected.move_object~=nil then
 					self.placing=true
 					editor.sys.map.objects[editor.selected.move_object].x=editor.mouse.map.x*editor.sys.map.tileset.tile_width
@@ -60,7 +58,7 @@ function object_tool:map_pressed(editor)
 					editor.selected.move_object=nil
 				end
 			elseif(editor.mouse.pressed=="r") then
-					if(hit) then editor.selected.move_object=target end
+					if(hit) then editor.selected.move_object=hit end
 			end
 	end
 	return editor

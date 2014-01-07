@@ -116,6 +116,7 @@ function multi_tile:map_hover(editor)
 								if(editor:check_hover(mouse, v)) then
 									self.hover.x=v.x
 									self.hover.y=v.y
+									self.hover.tile=v.id
 									if(self.old_mouse~=nil) then
 										self.hover.x=self.old_mouse.x
 										self.hover.y=self.old_mouse.y
@@ -135,6 +136,7 @@ function multi_tile:draw(editor)
 		tileset:select_grid(center.x, self.modal.y)	
 		self.hover:draw()
 		if(self.msg~=nil) then love.graphics.print(self.msg, self.modal.x+5, self.modal.y+5) end
+		if(self.hover.tile~=nil) then love.graphics.print(self.hover.tile, self.hover.x+2, self.hover.y+2) end
 	end
 	gt_widget.draw(self, editor)
 end
