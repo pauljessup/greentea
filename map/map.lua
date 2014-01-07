@@ -215,7 +215,7 @@ end
 
 function gt_map:tile_collide(object)
 	for i,o in self:get_layers() do
-		if(o.type=="collision") then
+		if(o.type=="collision") and (i>object.layer) then
 			if(o:get_tile(object.x, object.y)~=0) then
 				return o:get_tile(object.x, object.y)
 			end

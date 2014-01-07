@@ -142,7 +142,7 @@ function gt_transition:update(dt)
 			elseif(self.transition=="slideright") then
 				self.x=self.x-8
 			elseif(self.transition=="open") then
-				self.height=self.height+8
+				self.height=self.height+16
 			end
 			self:check_open()
 	elseif(self.closing) then
@@ -155,7 +155,7 @@ function gt_transition:update(dt)
 			elseif(self.transition=="slideright") then
 				self.x=self.x+8
 			elseif(self.transition=="open") then
-				self.height=self.height-8
+				self.height=self.height-16
 			end	
 			self:check_closed()
 	end

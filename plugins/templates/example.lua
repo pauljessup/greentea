@@ -21,14 +21,7 @@ function example_template:create(greentea)
 						speed=1,
 						default_tile=0,
 						})
-						
-		greentea:add_layer({id="shadows", 
-						opacity=150, 
-						speed=1,
-						default_tile=0,
-						type='collision'
-						})						
-						
+												
 		greentea:add_layer({id="walls", 
 						opacity=255, 
 						speed=1,
@@ -36,6 +29,14 @@ function example_template:create(greentea)
 						type='collision'
 						})		
 
+		greentea:add_layer({id="shadows", 
+						opacity=150, 
+						speed=1,
+						default_tile=0,
+						type='collision'
+						})						
+						
+						
 		greentea:add_layer({id="wall details", 
 						opacity=255, 
 						speed=1,
