@@ -17,7 +17,10 @@ function green_tea:init(dir)
 end
 
 function green_tea:editor_theme(theme)
-	self.theme=theme
+	if(love.filesystem.exists(self.plugin_directory .. "/editor/themes/" .. theme .. ".lua")) then
+		local theme_class=love.filesystem.load(self.plugin_directory .. "/editor/themes/" .. theme .. ".lua")()
+		self.theme=theme_class()
+	end
 end
 
 function green_tea:get_tile(layer, x, y)
