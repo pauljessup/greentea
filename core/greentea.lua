@@ -2,14 +2,14 @@
 --[[ If desired, you can actually inherit from this class using include(green_tea and --]]
 --[[ over-ride what you want. --]]
 local dir=...
-require(dir .. ".map")
+require(dir .. ".core.map")
 local green_tea=Class{}
 
 function green_tea:init(dir)
 	self.editing=false
 	self.has_editor=false
 	self.has_map=false -- whether or not a map is loaded.
-	self.lib_directory=dir
+	self.lib_directory=dir .. ".core"
 	self.plugin_directory=dir .. "/plugins"
 	self.file_dir=dir .. "/assets"
 	self:set_scale(1, 1)
