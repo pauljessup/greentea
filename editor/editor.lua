@@ -53,8 +53,8 @@ function gt_editor:init(sys)
 	self.sys=sys
 	self.tools={}
 	self.focus=gt_focus()	
-	self.window_color={r=0, g=0, b=0}
-	self.frame_color={r=200, g=200, b=200}
+	self.window_color=sys.theme.window_color
+	self.frame_color=sys.theme.outline_color
 
 	self.toolset={}
 	local x, y=self:calculate_location("right", 128, 0)

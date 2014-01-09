@@ -16,6 +16,10 @@ function green_tea:init(dir)
 	self.world={}
 end
 
+function green_tea:editor_theme(theme)
+	self.theme=theme
+end
+
 function green_tea:get_tile(layer, x, y)
 	return self.map:get_tile(layer, x, y)
 end
@@ -45,6 +49,8 @@ function green_tea:load(filename)
 		if(editor~=nil) and (love.filesystem.exists(self.plugin_directory .. "/editors/" .. editor .. ".lua")) then
 				local editor_class=love.filesystem.load(self.plugin_directory .. "/editors/" .. editor .. ".lua")()
 				self.editor=editor_class(self)
+				self.editor.window_color=theme.window_color
+				self.editor.outline_color=theme.outline_color
 		else
 				self.editor=gt_editor(self)
 		end
