@@ -1,3 +1,10 @@
+--[[
+	This theme creates a Final Fantasy color structure for the windows.
+	Solid blue background, white for the borders.
+	window_color=background.
+	outline_color=borders.
+--]]
+
 local ffclassic=Class{}
 ffclassic:include(gt_theme)
 
