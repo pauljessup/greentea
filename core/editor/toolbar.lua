@@ -9,7 +9,7 @@ function gt_toolbar:init(name, transition, x, y, orientation, padding, editor, c
 	self.tools={}
 	self.padding=padding
 	self.orientation=orientation
-	self.folder=editor.plugin_directory .. "/" .. name .. "/"
+	self.folder=editor.tool_directory .. "/" .. name .. "/"
 	local files = love.filesystem.getDirectoryItems(self.folder)
 	local id=#editor.tools
 	for num, name in pairs(files) do
@@ -24,6 +24,23 @@ function gt_toolbar:init(name, transition, x, y, orientation, padding, editor, c
 			end
 		end
 	end	
+
+	self.pluginfolder=editor.plugin_directory .. "/" .. name .. "/"
+	local files = love.filesystem.getDirectoryItems(self.pluginfolder)
+	local id=#editor.tools
+	for num, name in pairs(files) do
+		if(love.filesystem.isFile(self.pluginfolder .. name)) then
+			id=id+1
+			local cls=love.filesystem.load(self.pluginfolder .. name)()
+			if(cls~=nil) then 
+				local widget=cls(editor, 0, 0, id)
+				table.insert(editor.tools, widget) --for focus purposes. mostly.
+				table.insert(self.tools, {id=id, weight=widget.weight}) -- creates a reference.
+				table.sort(self.tools, function (a,b) return a.weight < b.weight end)
+			end
+		end
+	end
+	
 	local tx, ty, tw, th=x+padding, y+padding, padding*2, padding*2	
 	for i,v in ipairs(self.tools) do
 		local widget=editor.tools[v.id]

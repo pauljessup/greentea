@@ -10,6 +10,7 @@ function green_tea:init(dir)
 	self.has_editor=false
 	self.has_map=false -- whether or not a map is loaded.
 	self.lib_directory=dir .. ".core"
+	self.lib_loading=dir .. "/core"
 	self.plugin_directory=dir .. "/plugins"
 	self.file_dir=dir .. "/assets"
 	self:set_scale(1, 1)

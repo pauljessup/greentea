@@ -55,7 +55,7 @@ function tile_tool:draw_placement(editor)
 	local mapx,mapy=self.hover.x, self.hover.y
 	local tile_width, tile_height=editor.sys.map.tileset.tile_width, editor.sys.map.tileset.tile_height
 	if(not editor.selected.tiles.use) then
-		editor.sys.map.tileset:draw(editor.selected.tile, mapx, mapy, 150)
+		editor.sys.map.layers[editor.selected.layer].tileset:draw(editor.selected.tile, mapx, mapy, 150)
 	else
 		local ox,oy=editor.selected.tiles.x, editor.selected.tiles.y
 		local x, y=1,1

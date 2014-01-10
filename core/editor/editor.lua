@@ -14,8 +14,9 @@ function gt_editor:gain_focus(id)
 end
 
 function gt_editor:init(sys)
+	self.tool_directory=sys.lib_loading .. "/editor/tools"
 	self.plugin_directory=sys.plugin_directory .. "/editor"
-	self.asset_directory=self.plugin_directory .. "/assets"
+	self.asset_directory=self.tool_directory .. "/assets"
 	self.selected={}
 	self.selected.tile=1
 	self.selected.tiles={}

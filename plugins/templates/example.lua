@@ -13,55 +13,42 @@ function example_template:create(greentea)
 		greentea:add_layer({id="ground", 
 						opacity=255,  
 						speed=1,
-						default_tile=13
+						default_tile=4,
+						tileset={
+								id="ground",
+								tile_height=16,
+								tile_width=16,
+								image="game/maps/ground.png",
+							}
 						})
 						
 		greentea:add_layer({id="details", 
 						opacity=255, 
 						speed=1,
 						default_tile=0,
+						tileset={
+								id="details",
+								tile_height=16,
+								tile_width=16,
+								image="game/maps/details.png",
+							}
 						})
 												
 		greentea:add_layer({id="walls", 
 						opacity=255, 
 						speed=1,
 						default_tile=0,
-						type='collision'
-						})		
-
-		greentea:add_layer({id="shadows", 
-						opacity=150, 
-						speed=1,
-						default_tile=0,
-						type='collision'
-						})						
-						
-						
-		greentea:add_layer({id="wall details", 
-						opacity=255, 
-						speed=1,
-						default_tile=0,
-						})
-						
---[[ here's an example
-	if you want to use a parallax scrolling fog layer.
-	just uncomment out below.
-	
-	greentea:add_layer({
-					id=#greentea.map.layers,
-					type="parallax",
-					opacity=155,
-					speed=2,
-					default_tile=1,
-					tileset={
-								id="fogtiles",
+						type='collision',
+						tileset={
+								id="walls",
 								tile_height=16,
 								tile_width=16,
-								image="game/maps/fogtiles.png",
-							},
-					values={scroll_x=0, scroll_y=.2}
-				})
---]]				
+								image="game/maps/walls.png",
+								anims={
+											{ frames={19, 20}, speed=1}, -- frames to animate through, speed of animation. Lower is slower.
+									  }										
+							}
+						})		
 	return greentea
 end
 
