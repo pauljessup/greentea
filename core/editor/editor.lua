@@ -82,6 +82,9 @@ function gt_editor:get_objects(sys, folder)
 		if(love.filesystem.isFile(folder .. name)) then	
 			local object={id=name, type=name, x=0, y=0, opacity=255, speed=1, 0 }
 			local object_class=love.filesystem.load(folder .. name)()
+			object.file_directory=sys.file_dir
+			object.plugin_directory=sys.plugin_directory
+			object.lib_directory=sys.lib_loading
 			table.insert(self.objects, object_class(object))		
 		end
 	end
@@ -94,7 +97,6 @@ function gt_editor:set_object_grid()
 	local tallest, height, ox, oy=self.object_grid.tallest, 0, self.object_grid.x, self.object_grid.y
 	local x, y=ox, oy
 	for i,v in ipairs(self.objects) do
-		v:editor_init(self)
 		if(v.height>tallest) then tallest=v.height end
 		v.x=x
 		v.y=y+5
@@ -229,29 +231,30 @@ function gt_editor:check_mouse()
 		self.mouse.x, self.mouse.y=math.floor(self.mouse.x/self.sys.scale.x), math.floor(self.mouse.y/self.sys.scale.y)
 		self.mouse.map=self.sys.map:screen_to_map(self.selected.layer, self.mouse.x, self.mouse.y)
 		self.mouse.hover=self.sys.map:map_to_screen(self.selected.layer, self.mouse.map.x, self.mouse.map.y)
-		
-		if(self.mouse.x<1) then 
-			self.mouse.x=1 
-			if(math.floor(self.sys.map.camera.x)>=self.sys.map.tileset.tile_width) then			
-				self.sys.map:scroll(-.2, 0)
-			end			
+		if(love.window.hasMouseFocus()) then
+				if(self.mouse.x<=3) then 
+					--self.mouse.x=1 
+					if(math.floor(self.sys.map.camera.x)>=self.sys.map.tileset.tile_width) then			
+						self.sys.map:scroll(-.2, 0)
+					end			
+				end
+				if(self.mouse.y<=3) then
+					--self.mouse.y=1
+					if(math.floor(self.sys.map.camera.y)>=self.sys.map.tileset.tile_height) then			
+						self.sys.map:scroll(0, -.2)
+					end
+				end
+				if(self.mouse.x>((love.window.getWidth()/self.sys.scale.x)-8)) then
+					if(self.sys.map.camera.x<=((self.sys.map.width)*(self.sys.map.tileset.tile_width)-(love.window.getWidth()/self.sys.scale.x))) then		
+						self.sys.map:scroll(.2, 0)
+					end
+				end
+				if(self.mouse.y>((love.window.getHeight()/self.sys.scale.y)-8)) then
+					if(self.sys.map.camera.y<=((self.sys.map.height)*(self.sys.map.tileset.tile_height)-(love.window.getHeight()/self.sys.scale.y))) then
+						self.sys.map:scroll(0, .2)
+					end
+				end
 		end
-		if(self.mouse.y<=1) then
-			self.mouse.y=1
-			if(math.floor(self.sys.map.camera.y)>=self.sys.map.tileset.tile_height) then			
-				self.sys.map:scroll(0, -.2)
-			end
-		end
-		if(self.mouse.x>((love.window.getWidth()/self.sys.scale.x)-8)) then
-			if(self.sys.map.camera.x<=((self.sys.map.width)*(self.sys.map.tileset.tile_width)-(love.window.getWidth()/self.sys.scale.x))) then		
-				self.sys.map:scroll(.2, 0)
-			end
-		end
-		if(self.mouse.y>((love.window.getHeight()/self.sys.scale.y)-8)) then
-			if(self.sys.map.camera.y<=((self.sys.map.height)*(self.sys.map.tileset.tile_height)-(love.window.getHeight()/self.sys.scale.y))) then
-				self.sys.map:scroll(0, .2)
-			end
-		end		
 		self.mouse.width, self.mouse.height=self.sys.map.tileset.tile_width*self.sys.scale.x, self.sys.map.tileset.tile_height*self.sys.scale.y
 		self.mouse.widget={}
 		self.mouse.widget.x, self.mouse.widget.y=self.mouse.x, self.mouse.y

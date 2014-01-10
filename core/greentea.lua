@@ -47,7 +47,7 @@ end
 function green_tea:load(filename)
 	self.filename=filename
 	local fsys=gt_filesys(self.plugin_directory)
-	self:load_map(fsys:load(self.file_dir .. "/" .. filename))	
+	self:load_map(fsys:load(self.file_dir.maps .. "/" .. filename))	
 
 	if(self.has_editor) then
 		if(editor~=nil) and (love.filesystem.exists(self.plugin_directory .. "/editors/" .. editor .. ".lua")) then
@@ -64,7 +64,7 @@ end
 function green_tea:save(filename)
 	if(filename==nil) then filename=self.filename end
 	local fsys=gt_filesys(self.plugin_directory)
-	fsys:save(self.map, self.file_dir .. "/" .. filename)
+	fsys:save(self.map, self.file_dir.maps .. "/" .. filename)
 end
 
 function green_tea:using_editor(editor)
@@ -176,6 +176,8 @@ end
 
 function green_tea:load_map(map)
 			map.plugin_directory=self.plugin_directory
+			map.file_directory=self.file_dir
+			map.lib_directory=self.lib_loading
 			map.camera={x=0, y=0, height=(love.window.getHeight()/self.scale.y), width=(love.window.getWidth()/self.scale.x), speed=1, padding=4}
 			map.camera=self:load_camera(map.camera)
 			map.tileset=self:load_tileset(map.tileset)
@@ -247,6 +249,14 @@ end
 
 function green_tea:get_objects()
 	return self.map:get_objects()
+end
+
+function green_tea:get_object(id)
+	return self.map.objects[id]
+end
+
+function green_tea:set_object(id, object)
+	self.map.objects[id]=object
 end
 
 function green_tea:set_objects(objects)

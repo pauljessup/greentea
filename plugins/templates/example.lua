@@ -2,7 +2,6 @@ local example_template=Class{}
 example_template:include(gt_template)
 
 function example_template:init(values)
-	-- we can do whatevs.
 	gt_template.init(self, values)
 end
 
@@ -46,7 +45,7 @@ function example_template:create(greentea)
 								tile_width=16,
 								image="game/maps/walls.png",
 								anims={
-											{ frames={19, 20}, speed=1}, -- frames to animate through, speed of animation. Lower is slower.
+											{ frames={19, 20}, speed=10}, -- frames to animate through, speed of animation. Lower is slower.
 									  }										
 							}
 						})		

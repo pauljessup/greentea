@@ -2,9 +2,6 @@ gt_map=Class{}
 
 function gt_map:using_editor(use, editor)
 	self.editor=use
-	for i,v in ipairs(self.objects) do
-		v:editor_init(editor)
-	end
 end
 
 function gt_map:undo(touse)
@@ -73,6 +70,8 @@ function gt_map:init(map_table)
 	self.width=map_table.width
 	self.tileset=map_table.tileset
 	self.plugin_directory=map_table.plugin_directory
+	self.file_directory=map_table.file_directory
+	self.lib_directory=map_table.lib_directory
 	self.layers={}
 	self.objects={}	
 	if(map_table.values==nil) then self.values={} else self.values=map_table.values end
@@ -147,12 +146,17 @@ function gt_map:add_layer(v)
 end
 
 function gt_map:add_object(object)
+			object.file_directory=self.file_directory
+			object.plugin_directory=self.plugin_directory
+			object.lib_directory=self.lib_directory
 			if(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. object.type)) then
 				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. object.type)()
-				table.insert(self.objects, object_class(object))
-			elseif(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. self.name ..  "/" .. object.type)) then
-				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. self.name ..  "/" .. object.type)()
-				table.insert(self.objects, object_class(object))			
+				if(object.type~=nil) and (love.filesystem.exists(self.file_directory.objects .. "/" .. self.name ..  "/" .. object.id)) then
+						local object_class_map=love.filesystem.load(self.file_directory.objects .. "/" .. self.name ..  "/" .. object.id)(object_class)
+						table.insert(self.objects, object_class_map(object))
+				else
+					table.insert(self.objects, object_class(object))
+				end
 			else
 				table.insert(self.objects, gt_object(object))			
 			end	
@@ -233,11 +237,7 @@ end
 function gt_map:object_draw(layer)
 	for i, o in ipairs(self.objects) do
 		if(o.layer==layer) and (not o.hidden) then 
-			if(self.editor) then
-				o:editor_draw(self:get_layer(layer))
-			else
 				o:draw(self:get_layer(layer))
-			end
 		end 
 	end
 end
@@ -255,5 +255,14 @@ function gt_map:draw()
 	for l, i in self:get_layers() do
 		i:draw()
 		self:object_draw(l)
+	end
+	if(self.editor) then
+	for l, f in self:get_layers() do
+			for i, o in ipairs(self.objects) do
+				if(o.layer==l) then
+					o:editor_name_draw(f)
+				end
+			end
+		end
 	end
 end

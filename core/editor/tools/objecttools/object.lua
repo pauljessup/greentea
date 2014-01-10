@@ -36,7 +36,7 @@ function object_tool:map_pressed(editor)
 				if(editor.selected.move_object==nil) and editor.selected.edit_object==nil and not hit then
 					self.placing=true
 					local mapx,mapy=editor.mouse.map.x, editor.mouse.map.y
-					editor.sys:add_object({id=editor.selected.object,
+					editor.sys:add_object({id=(#editor.sys.map.objects+1),
 										type=editor.selected.object,
 										x=mapx*editor.sys.map.tileset.tile_width,
 										y=mapy*editor.sys.map.tileset.tile_width,
@@ -45,9 +45,6 @@ function object_tool:map_pressed(editor)
 										layer=editor.selected.layer
 										})
 					table.insert(editor.undo, {object=true}) 
-					for i,v in ipairs(editor.sys.map.objects) do
-						v:editor_init(editor)
-					end
 					editor.selected.move_object=nil
 				elseif editor.selected.move_object==nil and editor.selected.edit_object==nil and hit then
 					editor.selected.edit_object=hit

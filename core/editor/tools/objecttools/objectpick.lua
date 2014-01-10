@@ -56,7 +56,7 @@ function object_pick:map_hover(editor)
 		self.hover.x=object.x
 		self.hover.y=object.y
 		self.use_hover=true
-		self.hover.text=object.type
+		self.hover.text=string.gsub(object.type, ".lua", "")
 	end
 return editor
 end
