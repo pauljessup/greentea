@@ -8,7 +8,8 @@ end
 
 function example_template:create(greentea)
 	--this example creates a ground, and then a second ground (for details).
-	--above that, it adds a fog layer that constantly scrolls.
+	--above that, it adds a wall layer that is a collision layer. Everything on the wall
+	--layer forces a collision when something runs into it.
 
 		greentea:add_layer({id="ground", 
 						opacity=255,  

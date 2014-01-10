@@ -79,7 +79,7 @@ function multi_tile:map_pressed(editor)
 			mouse.x=editor.mouse.x-(tileset.tile_width*2)
 			editor.mouse.y=editor.mouse.y-(tileset.tile_height*2)
 			local center=editor:get_center_screen()
-			local grid=editor.sys.map.tileset:select_grid_layout(center.x, self.modal.y)	
+			local grid=editor.sys.map.layers[editor.selected.layer].tileset:select_grid_layout(center.x, self.modal.y)	
 			editor.selected.modal=self.modal
 			for i, v in ipairs(grid.hover_check) do
 						if(editor:check_hover(mouse, v)) then

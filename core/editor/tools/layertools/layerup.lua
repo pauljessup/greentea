@@ -14,6 +14,8 @@ function layerup:mouse_pressed(editor)
 		if(editor.selected.layer>#editor.sys.map.layers) then
 			editor.selected.layer=1
 		end
+		editor.selected.tile=1
+		editor.selected.tiles.use=false
 	end
 return editor
 end

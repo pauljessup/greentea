@@ -60,14 +60,14 @@ function tile_tool:draw_placement(editor)
 		local ox,oy=editor.selected.tiles.x, editor.selected.tiles.y
 		local x, y=1,1
 		local center=editor:get_center_screen()
-		local grid=editor.sys.map.tileset:select_grid_layout(center.x, center.y+editor.selected.modal.y)			
+		local grid=editor.sys.map.layers[editor.selected.layer].tileset:select_grid_layout(center.x, center.y+editor.selected.modal.y)			
 		
 		while y<=editor.selected.tiles.h do
 			while x<=editor.selected.tiles.w do
 					if(grid.tile_map[y+oy][x+ox]~=nil) then 
-						editor.sys.map.tileset:draw(grid.tile_map[y+oy][x+ox], mapx+(x*tile_width), mapy+(y*tile_height), 150)
+						editor.sys.map.layers[editor.selected.layer].tileset:draw(grid.tile_map[y+oy][x+ox], mapx+(x*tile_width), mapy+(y*tile_height), 150)
 					else
-						editor.sys.map.tileset:draw(1, mapx+(x*tile_width), mapy+(y*tile_height), 150)						
+						editor.sys.map.layers[editor.selected.layer].tileset:draw(1, mapx+(x*tile_width), mapy+(y*tile_height), 150)						
 					end
 					x=x+1
 			end

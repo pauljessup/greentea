@@ -14,6 +14,8 @@ function layerdown:mouse_pressed(editor)
 		if(editor.selected.layer<1) then
 			editor.selected.layer=#editor.sys.map.layers
 		end
+		editor.selected.tile=1
+		editor.selected.tiles.use=false
 	end
 return editor
 end
