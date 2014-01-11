@@ -36,6 +36,13 @@ function player:init(object_table)
 	self.walk.counter=0
 end
 
+--this makes it so that the player
+--is not saved when we save the 
+--map using the map editor.
+function player:save_table()
+	return nil
+end
+
 function player:collide(map, object)
 	self:displace()
 	map:displace()

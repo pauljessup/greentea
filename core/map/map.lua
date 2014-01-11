@@ -92,7 +92,9 @@ function gt_map:save_table()
 	l.width=self.width
 	l.objects={}
 	for i,v in ipairs(self.objects) do
-		table.insert(l.objects, v:save_table())
+		if(v:save_table()~=nil) then
+			table.insert(l.objects, v:save_table())
+		end
 	end
 	l.layers={}
 	for i,v in ipairs(self.layers) do
@@ -224,14 +226,15 @@ function gt_map:object_collide(object)
 	end
 	return false
 end
-	
+
 
 function gt_map:tile_collide(object)
 	for i,o in self:get_layers() do
-		if(o.type=="collision") and (i>object.layer) then
-			if(o:get_tile_by_pixel(object.x, object.y)~=0) or (o:get_tile_by_pixel(object.x+object.width, object.y+object.height)~=0) or (o:get_tile_by_pixel(object.x+object.width, object.y)~=0) or (o:get_tile_by_pixel(object.x, object.y+object.height)~=0)  then
-				return o:get_tile_by_pixel(object.x, object.y)
-			end
+		if(o.type=="collision") and (i>object.layer) then 
+			if(o:get_tile_by_pixel(object.x, object.y)~=0) then return o:get_tile_by_pixel(object.x, object.y)  end
+			if(o:get_tile_by_pixel(object.x+object.width, object.y+object.height)~=0) then return o:get_tile_by_pixel(object.x+object.width, object.y+object.height) end
+			if(o:get_tile_by_pixel(object.x+object.width, object.y)~=0) then return o:get_tile_by_pixel(object.x+object.width, object.y) end
+			if(o:get_tile_by_pixel(object.x, object.y+object.height)~=0)  then return o:get_tile_by_pixel(object.x, object.y+object.height) end
 		end
 	end
 	return false
