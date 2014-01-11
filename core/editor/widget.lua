@@ -10,7 +10,6 @@ function gt_widget:init(editor, x, y, id, tooltip)
 	self.is_hover=false
 	self.hover_tip=gt_frame(x+3, y-7, editor.font.font:getWidth(tooltip)+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=100}, {r=0, g=0, b=0, alpha=255}) 
 	self.focus=false
---	self.hidden=false
 	self.hidden=true
 end
 
@@ -22,7 +21,13 @@ function gt_widget:add_button(editor,filename)
 	self.button={}
 	self.button.active=false
 	self.button.hidden=false
-	self.button.image=love.graphics.newImage(editor.asset_directory .. "/" .. filename)
+	if(love.filesystem.exists(editor.asset_directory .. "/" .. filename)) then
+		self.button.image=love.graphics.newImage(editor.asset_directory .. "/" .. filename)
+	elseif(love.filesystem.exists(editor.plugin_directory .. "/assets/" .. filename)) then
+		self.button.image=love.graphics.newImage(editor.plugin_directory .. "/assets/" .. filename)
+	else
+		error(editor.plugin_directory .. "/assets/" .. filename  .. " does not exist")
+	end
 	self.height=self.button.image:getHeight()
 	self.width=self.button.image:getWidth()
 end
