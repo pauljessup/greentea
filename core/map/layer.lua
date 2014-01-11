@@ -93,6 +93,9 @@ function gt_layer:set_tile(tile_number, x, y)
 	self.map[y][x]=tile_number
 end
 
+function gt_layer:get_tile_by_pixel(x, y)
+	return self:get_tile(math.floor(x/self.tileset.tile_width), math.floor(y/self.tileset.tile_height))
+end
 
 function gt_layer:get_tile(x, y)
 	if(self.map[y]~=nil) then  return self.tileset:get(self.map[y][x]) else return 0 end

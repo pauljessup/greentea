@@ -74,6 +74,9 @@ function gt_map:init(map_table)
 	self.lib_directory=map_table.lib_directory
 	self.layers={}
 	self.objects={}	
+	self.old={}
+	self.old.x=self.camera.x
+	self.old.y=self.camera.y
 	if(map_table.values==nil) then self.values={} else self.values=map_table.values end
 end
 
@@ -129,7 +132,13 @@ function gt_map:move(x, y)
 	end
 end
 
+function gt_map:displace()
+	self:move(self.old.x, self.old.y)
+end
+
 function gt_map:scroll(x, y)
+	self.old.x=self.camera.x
+	self.old.y=self.camera.y
 	self.camera:scroll(x, y)
 	for i, v in self:get_layers() do
 		v:scroll(x, y)
@@ -220,8 +229,8 @@ end
 function gt_map:tile_collide(object)
 	for i,o in self:get_layers() do
 		if(o.type=="collision") and (i>object.layer) then
-			if(o:get_tile(object.x, object.y)~=0) then
-				return o:get_tile(object.x, object.y)
+			if(o:get_tile_by_pixel(object.x, object.y)~=0) or (o:get_tile_by_pixel(object.x+object.width, object.y+object.height)~=0) or (o:get_tile_by_pixel(object.x+object.width, object.y)~=0) or (o:get_tile_by_pixel(object.x, object.y+object.height)~=0)  then
+				return o:get_tile_by_pixel(object.x, object.y)
 			end
 		end
 	end
@@ -243,6 +252,12 @@ function gt_map:object_draw(layer)
 end
 
 function gt_map:update(dt)
+	if(not self.editor) then
+		for l, i in self:get_objects() do
+			obj=self:collide(i)
+			if(obj) then i:collide(self, obj) end
+		end		
+	end
 	for l, i in self:get_layers() do
 		i:update(dt)
 	end

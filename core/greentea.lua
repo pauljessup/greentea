@@ -76,6 +76,9 @@ function green_tea:run_editor()
 	if(self.has_editor) then
 		self.editor:run(self)
 		self.editing=true
+		self.cords={}
+		self.cords.x=self.map.camera.x
+		self.cords.y=self.map.camera.y
 	end
 end
 
@@ -83,6 +86,7 @@ function green_tea:stop_editor()
 	if(self.has_editor) then
 		self.editor:close(self)
 		self.editing=false
+		self:move(self.cords.x, self.cords.y)
 	end
 end
 
@@ -95,6 +99,7 @@ function green_tea:toggle_editor()
 		else
 			self.editor:close()
 			self.map:set_layer_cameras(self.world)
+			self:move(self.cords.x, self.cords.y)			
 		end
 	end
 end

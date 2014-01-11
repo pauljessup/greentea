@@ -22,6 +22,10 @@ function gt_object:init(object_table)
 		self.filename="placeholder.png"
 	end
 	
+	self.old={}
+	self.old.x=self.x
+	self.old.y=self.y
+	
 	self.speed=object_table.speed
 	self.opacity=object_table.opacity
 	self.layer=object_table.layer
@@ -32,7 +36,7 @@ end
 function gt_object:check_collision(object)
  if(self.width==nil) then self.width=self.image:getWidth() end
  if(self.height==nil) then self.height=self.image:getHeight() end
- 
+ if(object.id==self.id) then return false end
  if(object.layer~=self.layer) then return false end
  
  return object.x < self.x+self.width and
@@ -77,6 +81,27 @@ end
 function gt_object:update(map, dt)
 	-- I am just the default.
 	return map
+end
+
+function gt_object:scroll(x, y)
+	self.old.x=self.x
+	self.old.y=self.y
+	
+	self.x=self.x+x
+	self.y=self.y+y
+end
+
+function gt_object:move(x, y)
+	self.old.x=self.x
+	self.old.y=self.y
+	
+	self.x=x
+	self.y=y
+end
+
+function gt_object:displace()
+	self.x=self.old.x
+	self.y=self.old.y
 end
 
 function gt_object:get_screen_xy(layer)
