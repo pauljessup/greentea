@@ -17,6 +17,10 @@ function green_tea:init(dir)
 	self.world={}
 end
 
+function green_tea:editing()
+	return self.editing
+end
+
 function green_tea:editor_theme(theme)
 	if(love.filesystem.exists(self.plugin_directory .. "/editor/themes/" .. theme .. ".lua")) then
 		local theme_class=love.filesystem.load(self.plugin_directory .. "/editor/themes/" .. theme .. ".lua")()
@@ -238,6 +242,14 @@ end
 
 function green_tea:get_layers()
 	self.map:get_layers()
+end
+
+function green_tea:get_layer(id)
+	return self.map.layers[id]
+end
+
+function green_tea:set_layer(id, layer)
+	self.map.layers[id]=layer
 end
 
 function green_tea:set_layers(layers)
