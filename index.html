@@ -32,17 +32,33 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h3>
-<a name="welcome-to-greentea-the-pure-lualove2d-mapeditorloaderplayer" class="anchor" href="#welcome-to-greentea-the-pure-lualove2d-mapeditorloaderplayer"><span class="octicon octicon-link"></span></a>Welcome to Greentea: The pure Lua/Love2d Mapeditor/loader/player</h3>
+<a name="greentea-the-map-engine-evolved" class="anchor" href="#greentea-the-map-engine-evolved"><span class="octicon octicon-link"></span></a>Greentea: The Map Engine. Evolved</h3>
 
-<p>This is a mapeditor/loader/player written entirely in Love2d and Lua. It allows users to edit maps in the Love2d environment and save them, as well as load them and play them with ease. Right now the editor is a WIP, but will eventually allow people to call a mapeditor inside of their game while playing it.  Since Greentea uses a powerful plugin methodology for extending it, you can actually edit more than just maps inside the editor. You can edit objects on the map in real time as well, all based around how you want the program to run.</p>
+<p>Are you a LÖVE programmer? Have you always wanted to add a map editor or level editor to your game, but ended up just using Tiled instead? Have you ever wanted to call the map editor or level editor inside of your game with a push of a button or a click of the mouse? Well, Greentea can do all of that and much, much, more. </p>
+
+<p>Greentea:</p>
+
+<ul>
+<li>Is Built from the ground up in Lua and LÖVE</li>
+<li>Has complete Object Oriented Architecture, based around a format you already know (each object has an object and draw function, for starters)</li>
+<li>Has a Plugin based architecture to make it easy to extend and share these plugins with the community</li>
+<li>Everything is extendable. Maps, Layers, Objects, the Toolbars, the Mapeditor, the tools in the mapeditor. Everything.</li>
+<li>Can be called with a few simple commands</li>
+<li>Has a map editor that can be called inside of your game.</li>
+<li>Has it's own file format, but also has a file format plugin architecture, for future support of other map editor files.</li>
+<li>Leaves no footprint on your game when it uses it's own fonts or mouse icons.</li>
+<li>Has it's own object classes for dropping in game objects on the map and representing them in Lua and LÖVE. These can be used to a very powerful affect, or discarded entirely.</li>
+</ul><p>What Greentea is not:
+Greentea is not a stand alone map editor. There may be one added in the future, but right now it's mostly meant to be scripted to work. The scripting is very simple. You can take a look at the demo code:
+<a href="https://dl.dropboxusercontent.com/u/635941/greentea.love"></a><a href="https://dl.dropboxusercontent.com/u/635941/greentea.love">https://dl.dropboxusercontent.com/u/635941/greentea.love</a></p>
+
+<p>It's fully commented.</p>
 
 <h3>
 <a name="greentea-the-library" class="anchor" href="#greentea-the-library"><span class="octicon octicon-link"></span></a>Greentea: The Library</h3>
 
 <p>The git hub is the folder for the main library. This can be placed within your project, and then loaded with a simple:
 greantea=require("greentea")</p>
-
-<p>You can also put it in sub folders, so if you have a folder for libraries, you can put it in there, and it will automatically know where all the files are. Just remember to include the sub-folders when calling "require".</p>
 
 <p>Right now the mapengine uses TSerial for saving/loading maps and HUMP's Class system for allowing OOP in the way I think makes sense for the project. These files are included in the requisite directory, but I did not program either of these.</p>
 
@@ -70,9 +86,6 @@ end</p>
 <p>function love.draw()
     greentea:draw()
 end</p>
-
-<p>It's that easy! Here is that some example, packaged into a .love file:
-<a href="https://dl.dropboxusercontent.com/u/635941/greentea.love">https://dl.dropboxusercontent.com/u/635941/greentea.love</a></p>
       </section>
     </div>
 
