@@ -27,8 +27,8 @@ Right now the mapengine uses TSerial for saving/loading maps and HUMP's Class sy
 ### A Basic Example
 Here is a basic example for main.lua:
 
---you need to require greentea, and it returns a greentea object.
-greentea=require("greentea")
+		--you need to require greentea, and it returns a greentea object.
+		greentea=require("greentea")
 
 		love.graphics.setDefaultImageFilter("nearest", "nearest")
 		
