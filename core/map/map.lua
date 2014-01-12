@@ -206,11 +206,16 @@ function gt_map:get_layers()
 end
 
 function gt_map:get_object(id)
-	return self.objects[id]
+	for i,v in self:get_objects() do
+		if(v.id==id) then return v end
+	end
+	return nil
 end
 
 function gt_map:set_object(id, object)
-	self.objects[id]=object
+	for i,v in self:get_objects() do
+		self.objects[i]=object
+	end
 end
 
 --checks to see if any objects collide with 

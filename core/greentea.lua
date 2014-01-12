@@ -269,11 +269,11 @@ function green_tea:get_objects()
 end
 
 function green_tea:get_object(id)
-	return self.map.objects[id]
+	return self.map:get_object(id)
 end
 
 function green_tea:set_object(id, object)
-	self.map.objects[id]=object
+	self.map:set_object(id, object)
 end
 
 function green_tea:set_objects(objects)
