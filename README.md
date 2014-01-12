@@ -30,22 +30,22 @@ Here is a basic example for main.lua:
 --you need to require greentea, and it returns a greentea object.
 greentea=require("greentea")
 
-love.graphics.setDefaultImageFilter("nearest", "nearest")
-
-function love.load()
-	greentea:set_file_directory("game/maps")
-	greentea:set_scale(2, 2)
-	greentea:load("test.gtmap")
-end
-
-function love.update(dt)
-	--always need this--
-	greentea:update(dt)
-end
-
-function love.draw()
-	greentea:draw()
-end
+		love.graphics.setDefaultImageFilter("nearest", "nearest")
+		
+		function love.load()
+			greentea:set_file_directory("game/maps")
+			greentea:set_scale(2, 2)
+			greentea:load("test.gtmap")
+		end
+		
+		function love.update(dt)
+			--always need this--
+			greentea:update(dt)
+		end
+		
+		function love.draw()
+			greentea:draw()
+		end
 
 
 
