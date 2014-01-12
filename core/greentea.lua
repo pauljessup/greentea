@@ -280,4 +280,8 @@ function green_tea:set_objects(objects)
 	self.map:set_objects(objects)
 end
 
+function green_tea:follow_object(id)
+	self.map:follow_object(id)
+end
+
 return green_tea(dir)

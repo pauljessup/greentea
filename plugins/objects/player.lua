@@ -66,7 +66,6 @@ end
 
 function player:collide(map, object)
 	self:displace()
-	map:displace()
 end
 
 function player:update(map, dt)
