@@ -271,19 +271,18 @@ function gt_map:update(dt)
 		tmp_object.y=self.objects[self.follow].y		
 	end
 	
-	if(not self.editor) then
-		for l, i in self:get_objects() do
-			obj=self:collide(i)
-			if(obj) then i:collide(self, obj) end
-		end		
-	end
 	for l, i in self:get_layers() do
 		i:update(dt)
 	end
 	for l, i in self:get_objects() do
 		self=i:update(self, dt)
 	end
-	
+	if(not self.editor) then
+		for l, i in self:get_objects() do
+			obj=self:collide(i)
+			if(obj) then i:collide(self, obj) end
+		end		
+	end	
 	if(self.follow~=nil) then
 		local use_object=self.objects[self.follow]
 		self:scroll(use_object.x-tmp_object.x, use_object.y-tmp_object.y)
