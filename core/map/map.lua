@@ -205,12 +205,22 @@ function gt_map:get_layers()
 	return ipairs(self.layers)
 end
 
+function gt_map:get_object_table_id(id)
+	for i,v in self:get_objects() do
+		if(v.id==id) then return i end
+	end
+	return nil
+end
+
 function gt_map:get_object(id)
-	return self.objects[id]
+	local num=self:get_object_table_id(id)
+	if(num~=nil) then return self.objects[num] end
+	return nil
 end
 
 function gt_map:set_object(id, object)
-	self.objects[id]=object
+	local num=self:get_object_table_id(id)	
+	if(num~=nil) then self.objects[num]=object end
 end
 
 --checks to see if any objects collide with 
@@ -255,6 +265,12 @@ function gt_map:object_draw(layer)
 end
 
 function gt_map:update(dt)
+	local tmp_object={x=0, y=0}
+	if(self.follow~=nil) then 
+		tmp_object.x=self.objects[self.follow].x
+		tmp_object.y=self.objects[self.follow].y		
+	end
+	
 	if(not self.editor) then
 		for l, i in self:get_objects() do
 			obj=self:collide(i)
@@ -266,6 +282,11 @@ function gt_map:update(dt)
 	end
 	for l, i in self:get_objects() do
 		self=i:update(self, dt)
+	end
+	
+	if(self.follow~=nil) then
+		local use_object=self.objects[self.follow]
+		self:scroll(use_object.x-tmp_object.x, use_object.y-tmp_object.y)
 	end
 end
 
@@ -283,4 +304,8 @@ function gt_map:draw()
 			end
 		end
 	end
+end
+
+function gt_map:follow_object(id)
+	self.follow=self:get_object_table_id(id)	
 end
