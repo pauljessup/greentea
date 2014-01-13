@@ -170,7 +170,7 @@ function gt_editor:update(dt, sys)
 	self.sys=sys
 	self:check_mouse()
 	for i,v in ipairs(self.toolset) do v:update(dt, self) end
-	for i,v in self.sys.map:get_layers() do v:update(dt, true) end
+	for i,v in self.sys.map:get_layers() do v:update(self.sys.map, dt, true) end
 	
 	if(not self:update_tools(self.mouse)) then
 		local focus=self.focus:get()

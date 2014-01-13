@@ -52,13 +52,19 @@ function gt_layer:get_value(value)
 	return self.values[value]
 end
 
-function gt_layer:do_flood_fill(value, x, y, tochange, ox, oy)
+function gt_layer:do_flood_fill(value, x, y, tochange, ox, oy, limitx, limity)
 			if(ox==nil) then ox=x end if(oy==nil) then oy=y end
 			if(x<1) then return end if(y<1) then return end
 			--if(x>=self.width-2) then return end
 			--if(y>=self.height-2) then return end
-			if(x>ox+50) then return end
-			if(y>ox+50) then return end
+			if(limitx==nil) then limitx=10 end
+			if(limity==nil) then limity=10 end
+			if(x>ox+limitx) then return end
+			if(y>ox+limity) then return end
+			if(x<ox-limitx) then return end
+			if(y<ox-limity) then return end
+
+			
 			if(x>=self.width) then return end
 			if(y>=self.height) then return end			
 			
@@ -66,10 +72,10 @@ function gt_layer:do_flood_fill(value, x, y, tochange, ox, oy)
 			if self:get_tile(x,y) ~= tochange then return end
 			
 			self:set_tile(value, x, y)
-			self:do_flood_fill(value, x-1,y,tochange, ox, oy)
-			self:do_flood_fill(value, x+1,y,tochange, ox, oy)
-			self:do_flood_fill(value, x,y+1,tochange, ox, oy)			
-			self:do_flood_fill(value, x,y-1,tochange, ox, oy)
+			self:do_flood_fill(value, x-1,y,tochange, ox, oy, limitx, limity)
+			self:do_flood_fill(value, x+1,y,tochange, ox, oy, limitx, limity)
+			self:do_flood_fill(value, x,y+1,tochange, ox, oy, limitx, limity)			
+			self:do_flood_fill(value, x,y-1,tochange, ox, oy, limitx, limity)
 end
 
 function gt_layer:flood_fill(value, x, y)
@@ -125,7 +131,7 @@ function gt_layer:set_camera(camera)
 end
 
 
-function gt_layer:update(dt, editor)
+function gt_layer:update(map, dt, editor)
 	self.tileset:update(dt)
 	if(not editor) then
 			self.camera:update(dt)

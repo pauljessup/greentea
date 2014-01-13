@@ -33,9 +33,37 @@ function gt_map:set_tile(tilenumber, layer, x, y) -- map positions.
 end
 
 function gt_map:flood_fill(tilenumber, layer, x, y) -- map positions.
-	self.layers[layer]:flood_fill(tilenumber, x, y)
+	local layer=self:get_layer(layer)
+	layer:flood_fill(tilenumber, x, y)
 end
 
+function gt_map:copy_layer(layerid, newid)
+	local layer=self:get_layer(layerid)
+	local newlayer=self:get_layer(newid)
+	if(newlayer==nil) then			
+			self:add_layer({
+								id=newid, 
+								opacity=layer.opacity, 
+								speed=layer.speed,
+								camera=layer.camera,
+								default_tile=0,
+								tileset=layer.tileset,
+								width=layer.width,
+								height=layer.height,
+								})
+			newlayer=self.layers[#self.layers]
+	end
+	
+	local x, y=1,1
+	while y<=self.height do
+		while x<=self.width do
+			newlayer:set_tile(layer:get_tile(x, y), x, y)
+			x=x+1
+		end
+		x=1
+		y=y+1
+	end
+end
 
 function gt_map:get_tile(layer, x, y) -- map positions.
 	return self.layers[layer]:get_tile(x, y)
@@ -120,8 +148,12 @@ function gt_map:set_camera(camera)
 end
 
 function gt_map:get_layer(id)
+	for i,v in self:get_layers() do
+		if(v.id==id) then return v end
+	end	
 	return self.layers[id]
 end
+
 
 function gt_map:set_layer(id, layer)
 	self.layers[id]=layer
@@ -148,11 +180,12 @@ function gt_map:scroll(x, y)
 end
 
 function gt_map:add_layer(v)
+			v.map_id=#self.layers+1
 			if(v.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/layers/" .. v.type .. ".lua")) then
 				local layer_class=love.filesystem.load(self.plugin_directory .. "/layers/" .. v.type .. ".lua")()
-				table.insert(self.layers, layer_class(v))
+				table.insert(self.layers, layer_class(v, self))
 			else
-				table.insert(self.layers, gt_layer(v))			
+				table.insert(self.layers, gt_layer(v, self))			
 			end
 end
 
@@ -272,7 +305,7 @@ function gt_map:update(dt)
 	end
 	
 	for l, i in self:get_layers() do
-		i:update(dt)
+		i:update(self, dt)
 	end
 	for l, i in self:get_objects() do
 		self=i:update(self, dt)
@@ -291,7 +324,7 @@ end
 
 function gt_map:draw()
 	for l, i in self:get_layers() do
-		i:draw()
+		i:draw(self.editor)
 		self:object_draw(l)
 	end
 	if(self.editor) then
