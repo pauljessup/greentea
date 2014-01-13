@@ -339,5 +339,6 @@ function gt_map:draw()
 end
 
 function gt_map:follow_object(id)
-	self.follow=self:get_object_table_id(id)	
+	self.follow=self:get_object_table_id(id)
+	self:move(self.objects[self.follow].x-self.camera.width, self.objects[self.follow].y-self.camera.height)
 end
