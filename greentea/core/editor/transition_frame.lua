@@ -41,7 +41,7 @@ function gt_transition:get_starting(editor)
 	elseif(self.transition=="slideleft") then
 		self.x=0-self.width
 	elseif(self.transition=="slideright") then
-		self.x=(love.window.getWidth()/editor.sys.scale.x)+self.width
+		self.x=(love.graphics.getWidth()/editor.sys.scale.x)+self.width
 	elseif(self.transition=="open") then
 		self.height=0
 	end
@@ -55,7 +55,7 @@ function gt_transition:get_ending(editor)
 	elseif(self.transition=="slideleft") then
 		self.targetx=0-self.width
 	elseif(self.transition=="slideright") then
-		self.targetx=(love.window.getWidth()/editor.sys.scale.x)+self.width
+		self.targetx=(love.graphics.getWidth()/editor.sys.scale.x)+self.width
 	elseif(self.transition=="open") then
 		self.height=0
 	end

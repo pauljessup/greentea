@@ -59,7 +59,7 @@ function gt_editor:init(sys)
 
 	self.toolset={}
 	local x, y=self:calculate_location("right", 128, 0)
-	table.insert(self.toolset, gt_transition("slidedown", -5, -5, (love.window.getWidth()/self.sys.scale.x)+50, 35,  self.window_color, self.frame_color, self))	
+	table.insert(self.toolset, gt_transition("slidedown", -5, -5, (love.graphics.getWidth()/self.sys.scale.x)+50, 35,  self.window_color, self.frame_color, self))	
 	table.insert(self.toolset, gt_toolbar("maptools", "slidedown", x, y, "horizontal", 6, self, {r=0, g=0, b=0, alpha=0}, {r=0, g=0, b=0, alpha=0}))	
 	table.insert(self.toolset, gt_toolbar("tiletools", "slideleft", 5, 50, "vertical", 6, self))	
 	local x, y=self:calculate_location("right", 40, 0)	
@@ -70,9 +70,9 @@ end
 
 function gt_editor:calculate_location(location, x, y)
 	if(location=="top") then y=5 end
-	if(location=="bottom") then y=(love.window.getHeight()/self.scale.y)-y end
+	if(location=="bottom") then y=(love.graphics.getHeight()/self.scale.y)-y end
 	if(location=="left") then x=5 end
-	if(location=="right") then x=(love.window.getWidth()/self.sys.scale.x)-x end
+	if(location=="right") then x=(love.graphics.getWidth()/self.sys.scale.x)-x end
 	return x, y
 end
 
@@ -92,7 +92,7 @@ function gt_editor:get_objects(sys, folder)
 end
 
 function gt_editor:set_object_grid()
-	self.object_grid.width=(love.window.getWidth()/self.sys.scale.x)-100
+	self.object_grid.width=(love.graphics.getWidth()/self.sys.scale.x)-100
 	if(self.object_grid.tallest==nil) then self.object_grid.tallest=0 end
 	local tallest, height, ox, oy=self.object_grid.tallest, 0, self.object_grid.x, self.object_grid.y
 	local x, y=ox, oy
@@ -222,7 +222,7 @@ function gt_editor:draw()
 end
 
 function gt_editor:get_center_screen()
-	return {x=(love.window.getWidth()/self.sys.scale.x)/2, y=(love.window.getHeight()/self.sys.scale.y)/2}
+	return {x=(love.graphics.getWidth()/self.sys.scale.x)/2, y=(love.graphics.getHeight()/self.sys.scale.y)/2}
 end
 
 function gt_editor:check_mouse()
@@ -244,13 +244,13 @@ function gt_editor:check_mouse()
 						self.sys.map:scroll(0, -.2)
 					end
 				end
-				if(self.mouse.x>((love.window.getWidth()/self.sys.scale.x)-8)) then
-					if(self.sys.map.camera.x<=((self.sys.map.width)*(self.sys.map.tileset.tile_width)-(love.window.getWidth()/self.sys.scale.x))) then		
+				if(self.mouse.x>((love.graphics.getWidth()/self.sys.scale.x)-8)) then
+					if(self.sys.map.camera.x<=((self.sys.map.width)*(self.sys.map.tileset.tile_width)-(love.graphics.getWidth()/self.sys.scale.x))) then		
 						self.sys.map:scroll(.2, 0)
 					end
 				end
-				if(self.mouse.y>((love.window.getHeight()/self.sys.scale.y)-8)) then
-					if(self.sys.map.camera.y<=((self.sys.map.height)*(self.sys.map.tileset.tile_height)-(love.window.getHeight()/self.sys.scale.y))) then
+				if(self.mouse.y>((love.graphics.getHeight()/self.sys.scale.y)-8)) then
+					if(self.sys.map.camera.y<=((self.sys.map.height)*(self.sys.map.tileset.tile_height)-(love.graphics.getHeight()/self.sys.scale.y))) then
 						self.sys.map:scroll(0, .2)
 					end
 				end
@@ -271,12 +271,12 @@ end
 function gt_editor:check_button()
 		local down, p=false, ""
 		
-		if(love.mouse.isDown("r")) then 
+		if(love.mouse.isDown(2)) then 
 			down=true
 			p="r"
 		end
 		
-		if(love.mouse.isDown("l")) then 
+		if(love.mouse.isDown(1)) then 
 			down=true
 			p="l"
 		end

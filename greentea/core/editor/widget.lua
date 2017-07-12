@@ -76,7 +76,7 @@ function gt_widget:tool_tip_draw(editor)
 	if(not self.hidden) then
 			if(self.is_hover) then 
 				self.tx=self.x
-				if((self.x+5+editor.font.font:getWidth(self.tooltip))>(love.window.getWidth()/editor.sys.scale.x)) then
+				if((self.x+5+editor.font.font:getWidth(self.tooltip))>(love.graphics.getWidth()/editor.sys.scale.x)) then
 					self.tx=self.tx-(editor.font.font:getWidth(self.tooltip))
 					self.hover_tip.x=self.tx
 				end

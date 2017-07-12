@@ -30,13 +30,13 @@ function gt_frame:draw()
 	   
 			love.graphics.setPointSize(3)
 		   --pixel top left hand side
-		   love.graphics.point(self.x+.5, self.y+.5)
+		   love.graphics.points(self.x+.5, self.y+.5)
 		   --pixel top right hand side
-		   love.graphics.point(self.x+((self.width)-.5), self.y+.5)
+		   love.graphics.points(self.x+((self.width)-.5), self.y+.5)
 		   --pixel bottom right hand side
-		   love.graphics.point(self.x+.5, self.y+(self.height)-0.5)
+		   love.graphics.points(self.x+.5, self.y+(self.height)-0.5)
 		   --pixel top bottom hand left side
-		   love.graphics.point(self.x+((self.width)-.5), self.y+(self.height)-0.5)		   
+		   love.graphics.points(self.x+((self.width)-.5), self.y+(self.height)-0.5)		   
 
 		   love.graphics.setLineStyle("smooth")
 		   love.graphics.setColor(255, 255, 255, 255)	
