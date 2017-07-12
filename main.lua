@@ -1,4 +1,8 @@
 --[[
+THIS AND THE GAME FOLDERS ARE EXAMPLES ON HOW TO USE THE LIBRARY
+GREENTEA IS THE FOLDER CONTAINING THE ACTUAL MAP LIBRARY.
+
+
 Namespacing:
 All classes that are used have the gt_ prefix in front of it.
 gt_widget=widgets
