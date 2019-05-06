@@ -13,7 +13,7 @@ function gt_toolbar:init(name, transition, x, y, orientation, padding, editor, c
 	local files = love.filesystem.getDirectoryItems(self.folder)
 	local id=#editor.tools
 	for num, name in pairs(files) do
-		if(love.filesystem.isFile(self.folder .. name)) then
+		if(love.filesystem.getInfo(self.folder .. name)) then
 			id=id+1
 			local cls=love.filesystem.load(self.folder .. name)()
 			if(cls~=nil) then 
@@ -57,8 +57,8 @@ function gt_toolbar:init(name, transition, x, y, orientation, padding, editor, c
 				end
 	end
 	
-	editor.window_color.alpha=175
-	editor.frame_color.alpha=200
+	editor.window_color.alpha=65
+	editor.frame_color.alpha=80
 	if(col==nil) then col=editor.window_color end
 	if(outline==nil) then outline=editor.window_color end
 	gt_transition.init(self, transition, x, y, tw, th, col, outline, editor)

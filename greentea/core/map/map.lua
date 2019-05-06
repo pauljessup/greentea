@@ -148,7 +148,7 @@ function gt_map:scroll(x, y)
 end
 
 function gt_map:add_layer(v)
-			if(v.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/layers/" .. v.type .. ".lua")) then
+			if(v.type~=nil) and (love.filesystem.getInfo(self.plugin_directory .. "/layers/" .. v.type .. ".lua")) then
 				local layer_class=love.filesystem.load(self.plugin_directory .. "/layers/" .. v.type .. ".lua")()
 				table.insert(self.layers, layer_class(v))
 			else
@@ -160,9 +160,9 @@ function gt_map:add_object(object)
 			object.file_directory=self.file_directory
 			object.plugin_directory=self.plugin_directory
 			object.lib_directory=self.lib_directory
-			if(object.type~=nil) and (love.filesystem.exists(self.plugin_directory .. "/objects/" .. object.type)) then
+			if(object.type~=nil) and (love.filesystem.getInfo(self.plugin_directory .. "/objects/" .. object.type)) then
 				local object_class=love.filesystem.load(self.plugin_directory .. "/objects/" .. object.type)()
-				if(object.type~=nil) and (love.filesystem.exists(self.file_directory.objects .. "/" .. self.name ..  "/" .. object.id)) then
+				if(object.type~=nil) and (love.filesystem.getInfo(self.file_directory.objects .. "/" .. self.name ..  "/" .. object.id)) then
 						local object_class_map=love.filesystem.load(self.file_directory.objects .. "/" .. self.name ..  "/" .. object.id)(object_class)
 						table.insert(self.objects, object_class_map(object))
 				else

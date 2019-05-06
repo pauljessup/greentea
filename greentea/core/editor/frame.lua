@@ -14,10 +14,10 @@ function gt_frame:draw()
 			if(self.hidden) then return end
 		   love.graphics.setLineStyle("rough")
 
-		   love.graphics.setColor(self.col.r, self.col.g, self.col.b, self.col.alpha)		   
+		   love.graphics.setColor(self.col.r/255, self.col.g/255, self.col.b/255, self.col.alpha/100)
 		   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 		   		   
-		   love.graphics.setColor(self.outline.r, self.outline.g, self.outline.b, self.outline.alpha)
+		   love.graphics.setColor(self.outline.r/255, self.outline.g/255, self.outline.b/255, self.outline.alpha/100)
 
 		   -- RIGHT HAND SIDE
 		   love.graphics.line(self.x+self.width, self.y+1, self.x+self.width, self.y+self.height-1)
@@ -39,5 +39,5 @@ function gt_frame:draw()
 		   love.graphics.points(self.x+((self.width)-.5), self.y+(self.height)-0.5)		   
 
 		   love.graphics.setLineStyle("smooth")
-		   love.graphics.setColor(255, 255, 255, 255)	
+		   love.graphics.setColor(255/255, 255/255, 255/255, 100/100)	
 end

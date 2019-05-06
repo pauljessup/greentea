@@ -22,7 +22,7 @@ function green_tea:editing()
 end
 
 function green_tea:editor_theme(theme)
-	if(love.filesystem.exists(self.plugin_directory .. "/editor/themes/" .. theme .. ".lua")) then
+	if(love.filesystem.getInfo(self.plugin_directory .. "/editor/themes/" .. theme .. ".lua")) then
 		local theme_class=love.filesystem.load(self.plugin_directory .. "/editor/themes/" .. theme .. ".lua")()
 		self.theme=theme_class()
 	end

@@ -17,7 +17,9 @@ function gt_file_format:load(filename)
 end
 
 function gt_file_format:save(map, filename)
-	local file = io.open(filename, "w")
+	path=love.filesystem.getSourceBaseDirectory()
+	path=path .. "/" .. love.filesystem.getIdentity() .. "/"
+	local file = io.open(path .. filename, "w")
 	file:write("return " .. TSerial.pack(map:save_table()) )
 	file:close()
 end

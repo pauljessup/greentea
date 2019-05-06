@@ -7,7 +7,7 @@ function object_pick:init(editor, x, y, id)
 	gt_widget.init(self, editor, x, y, id, "choose an object to place")
 	self.name="obectpick"
 	self.modal=gt_transition("slideleft", 0, 0, editor.sys.map.tileset.image:getWidth()+(editor.sys.map.tileset.tile_width*4), editor.sys.map.tileset.image:getHeight(), editor.window_color, editor.frame_color, editor)
-	self.hover=gt_frame(0, 0, editor.sys.map.tileset.tile_width, editor.sys.map.tileset.tile_height, {r=216, g=194, b=92, alpha=100}, {r=133, g=120, b=57, alpha=175})
+	self.hover=gt_frame(0, 0, editor.sys.map.tileset.tile_width, editor.sys.map.tileset.tile_height, {r=216, g=194, b=92, alpha=50}, {r=133, g=120, b=57, alpha=75})
 	self.weight=3
 	self.working_layer=editor.selected.layer
 	self:add_button(editor, "tilepick.png")

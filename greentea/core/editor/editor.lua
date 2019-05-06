@@ -27,7 +27,7 @@ function gt_editor:init(sys)
 	
 	self.mouse={x=0, y=0, held=false, holding=0}
 	
-	if(love.filesystem.exists(self.asset_directory .. "/logo.png")) then 
+	if(love.filesystem.getInfo(self.asset_directory .. "/logo.png")) then 
 		self.logo={}
 		self.logo.image=love.graphics.newImage(self.asset_directory .. "/logo.png")
 		self.logo.fade=false
@@ -35,20 +35,20 @@ function gt_editor:init(sys)
 		self.logo.fade_value=0
 		self.logo.hold_value=0
 	end
-	if(love.filesystem.exists(self.asset_directory .. "/mouse.png")) then
+	if(love.filesystem.getInfo(self.asset_directory .. "/mouse.png")) then
 		self.cursor = love.graphics.newImage(self.asset_directory .. "/mouse.png")
 		self.show_mouse=love.mouse.isVisible()
 		self.edit_show_mouse=false
 		love.mouse.setVisible(false)
 	end
-	if(love.filesystem.exists(self.asset_directory .. "/font.png")) then
+	if(love.filesystem.getInfo(self.asset_directory .. "/font.png")) then
 		--default font.
 		 self.font={}
 		 self.font.old=love.graphics.getFont()
 		 self.font.glyphs=" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'abcdefghijklmnopqrstuvwxyz{}"	
-		 self.font.image = love.graphics.newImage(self.asset_directory .. "/font.png")
-		 self.font.image:setFilter("nearest", "nearest")
-		 self.font.font=love.graphics.newImageFont(self.font.image, self.font.glyphs)
+		 --self.font.image = love.graphics.newImage(self.asset_directory .. "/font.png")
+		 --self.font.image:setFilter("nearest", "nearest")
+		 self.font.font=love.graphics.newImageFont(self.asset_directory .. "/font.png", self.font.glyphs)
 	end	
 
 	self.sys=sys
@@ -79,7 +79,7 @@ end
 function gt_editor:get_objects(sys, folder)
 	local files = love.filesystem.getDirectoryItems(folder)	
 	for num, name in pairs(files) do
-		if(love.filesystem.isFile(folder .. name)) then	
+		if(love.filesystem.getInfo(folder .. name)) then	
 			local object={id=name, type=name, x=0, y=0, opacity=255, speed=1, 0 }
 			local object_class=love.filesystem.load(folder .. name)()
 			object.file_directory=sys.file_dir
@@ -209,11 +209,11 @@ function gt_editor:draw()
 				self.logo.hold_value=self.logo.hold_value-1
 			end
 		end
-		love.graphics.setColor(255, 255, 255, self.logo.fade_value)
+		love.graphics.setColor(255/255, 255/255, 255/255, self.logo.fade_value/255)
 		center=self:get_center_screen()
 		center.x, center.y=center.x-(self.logo.image:getWidth()/2), center.y-self.logo.image:getHeight()
 		love.graphics.draw(self.logo.image, center.x, center.y)
-		love.graphics.setColor(255, 255, 255, 255)		
+		love.graphics.setColor(255/255, 255/255, 255/255, 100/100)		
 	end
 		love.graphics.print("editing " .. self.sys.map.name .. "  map      size: " .. self.sys.map.width .. "x" .. self.sys.map.height, 5, 2)
 		percentage=math.floor((self.sys.map.layers[self.selected.layer].opacity/255)*(100/1))

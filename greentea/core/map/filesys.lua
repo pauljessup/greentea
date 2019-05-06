@@ -28,6 +28,7 @@ function gt_filesys:load(file)
 end
 
 function gt_filesys:save(map, file)
+
 	local fformat=self:get_format(file)
-	fformat:save(map, love.filesystem.getWorkingDirectory() .. "/" .. file)
+	fformat:save(map, file)
 end

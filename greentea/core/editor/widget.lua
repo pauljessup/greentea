@@ -8,22 +8,22 @@ function gt_widget:init(editor, x, y, id, tooltip)
 	self.width, self.height=0,0
 	self.tooltip=tooltip
 	self.is_hover=false
-	self.hover_tip=gt_frame(x+3, y-7, editor.font.font:getWidth(tooltip)+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=100}, {r=0, g=0, b=0, alpha=255}) 
+	self.hover_tip=gt_frame(x+3, y-7, editor.font.font:getWidth(tooltip)+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=50}, {r=0, g=0, b=0, alpha=100}) 
 	self.focus=false
 	self.hidden=true
 end
 
 function gt_widget:set_tooltip(editor,tooltip)
-	self.hover_tip=gt_frame(self.x+3, self.y-7, editor.font.font:getWidth(tooltip)+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=100}, {r=0, g=0, b=0, alpha=255}) 
+	self.hover_tip=gt_frame(self.x+3, self.y-7, editor.font.font:getWidth(tooltip)+5, editor.font.font:getHeight()+5, {r=0, g=0, b=0, alpha=50}, {r=0, g=0, b=0, alpha=100}) 
 end
 
 function gt_widget:add_button(editor,filename)
 	self.button={}
 	self.button.active=false
 	self.button.hidden=false
-	if(love.filesystem.exists(editor.asset_directory .. "/" .. filename)) then
+	if(love.filesystem.getInfo(editor.asset_directory .. "/" .. filename)) then
 		self.button.image=love.graphics.newImage(editor.asset_directory .. "/" .. filename)
-	elseif(love.filesystem.exists(editor.plugin_directory .. "/assets/" .. filename)) then
+	elseif(love.filesystem.getInfo(editor.plugin_directory .. "/assets/" .. filename)) then
 		self.button.image=love.graphics.newImage(editor.plugin_directory .. "/assets/" .. filename)
 	else
 		error(editor.plugin_directory .. "/assets/" .. filename  .. " does not exist")
@@ -91,9 +91,9 @@ function gt_widget:draw(editor)
 			if(self.button~=nil) and (not self.button.hidden) then
 					love.graphics.draw(self.button.image, self.x, self.y)
 					if(self.button.active) then
-							love.graphics.setColor(87, 187, 87, 100)		   
+							love.graphics.setColor(87/255, 187/255, 87/255, 150/255)		   
 							love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-							love.graphics.setColor(255, 255, 255, 255)		   
+							love.graphics.setColor(255/255, 255/255, 255/255, 255/255)		   
 					end
 			end
 	end
